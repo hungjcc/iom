@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found (404){% endblock %}
+
+{% block content %}
+<div class="container error-404">
+  <h1>404 — Page Not Found</h1>
+  <p>Sorry, the page you were looking for doesn't exist or has been removed.</p>
+
+  <p>
+    <a class="btn" href="{{ url_for('index') }}">Return to homepage</a>
+    <a class="btn" href="{{ url_for('auctions') }}">Browse auctions</a>
+  </p>
+
+  <p class="muted-note">If you expected this page to exist, please contact the site administrator.</p>
+</div>
+{% endblock %}

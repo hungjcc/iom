@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-card">
+  <h1>Sell Item (placeholder)</h1>
+  <p>Converted from <code>template_sell_item.php</code>. Implement seller item form and upload logic in Flask later.</p>
+  <form method="post" action="{{ url_for('post_items_for_sale') }}">
+    <label>Title <input name="title"></label><br>
+    <label>Description <textarea name="desc"></textarea></label><br>
+    <button type="submit">Post</button>
+  </form>
+</div>
+{% endblock %}

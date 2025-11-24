@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="results-listing">
+    <h3>Last created auctions</h3>
+    <table class="results-table">
+        <thead>
+            <tr>
+                <th>Item Title</th>
+                <th>Highest price</th>
+                <th>Member ID</th>
+                <th>End Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if not items %}
+                <tr><td colspan="4">No items found.</td></tr>
+            {% else %}
+                {% for row in items %}
+                    <tr class="row-{{ loop.index0 % 2 }}">
+                        <td><a href="{{ url_for('view_auction', item_id=row.id) }}">{{ row.title }}</a></td>
+                        <td>{{ row.max_price }}</td>
+                        <td>{{ row.max_bidder }}</td>
+                        <td>{{ row.end_date }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+    <p class="mt-18">*** End of records ***</p>
+</div>
+{% endblock %}

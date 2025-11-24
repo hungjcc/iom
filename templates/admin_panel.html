@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+  <h1>Admin Panel</h1>
+  <p>Manage user confirmations and lockouts.</p>
+
+  <p>Logged in as: <strong>{{ user.username if user else session.get('u_name') }}</strong></p>
+
+  <h2>Quick Actions</h2>
+  <ul class="admin-actions">
+    <li>
+      <form method="post" action="{{ url_for('admin_resend') }}" class="inline-form">
+        <input name="member_id" placeholder="member id or email">
+          <button type="submit">Resend confirmation</button>
+        </form>
+      </li>
+
+    </ul>
+
+    <h2>Members</h2>
+    {% if members %}
+      <table class="members-table">
+        {% extends 'base.html' %}
+
+        {% block title %}Admin Panel{% endblock %}
+
+        {% block content %}
+          <h1>Admin Panel</h1>
+          <p>Manage user confirmations and lockouts.</p>
+
+          <p>Logged in as: <strong>{{ user.username if user else session.get('u_name') }}</strong></p>
+
+          <h2>Quick Actions</h2>
+          <ul class="admin-actions">
+            <li>
+              <form method="post" action="{{ url_for('admin_resend') }}" class="inline-form">
+                <input name="member_id" placeholder="member id or email">
+                <button type="submit">Resend confirmation</button>
+              </form>
+            </li>
+            <li>
+              <form method="post" action="{{ url_for('admin_unlock') }}" class="inline-form">
+                <input name="member" placeholder="username or member id">
+                <button type="submit">Unlock account</button>
+              </form>
+            </li>
+            <li>
+              <form method="post" action="{{ url_for('admin_grant') }}" class="inline-form">
+                <input name="member" placeholder="username or member id">
+                <button type="submit">Grant admin</button>
+              </form>
+            </li>
+            <li>
+              <form method="post" action="{{ url_for('admin_revoke') }}" class="inline-form">
+                <input name="member" placeholder="username or member id">
+                <button type="submit">Revoke admin</button>
+              </form>
+            </li>
+          </ul>
+
+          <h2>Members</h2>
+          {% if members %}
+            <table class="members-table">
+              <thead>
+                <tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Admin</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                {% for m in members %}
+                <tr>
+                  <td>{{ m.get('id') or m.get('m_id') or '' }}</td>
+                  <td>{{ m.get('username') or m.get('m_login_id') or '' }}</td>
+                  <td>{{ m.get('email') or '-' }}</td>
+                  <td>{{ m.get('status') or '-' }}</td>
+                  <td>
+                    {% set role_val = (m.get('m_role') or '')|lower %}
+                    {% set is_admin_flag = (m.get('m_is_admin') or m.get('is_admin') or ('admin' in role_val)) %}
+                    {% if is_admin_flag %}
+                      Yes
+                    {% else %}
+                      No
+                    {% endif %}
+                  </td>
+                  <td>
+                    <form style="display:inline" method="post" action="{{ url_for('admin_resend', m_id=(m.get('id') or m.get('m_id')) ) }}">
+                      <button type="submit">Resend Confirmation</button>
+                    </form>
+                    <form style="display:inline" method="post" action="{{ url_for('admin_unlock', m_id=(m.get('id') or m.get('m_id')) ) }}">
+                      <button type="submit">Unlock</button>
+                    </form>
+                    {% if not is_admin_flag %}
+                    <form style="display:inline" method="post" action="{{ url_for('admin_grant', m_id=(m.get('id') or m.get('m_id')) ) }}">
+                      <button type="submit" {% if (m.get('status') or '')|string != 'A' %}disabled title="Cannot grant admin: user not active"{% endif %}>Grant Admin</button>
+                    </form>
+                    {% else %}
+                    <form style="display:inline" method="post" action="{{ url_for('admin_revoke', m_id=(m.get('id') or m.get('m_id')) ) }}">
+                      <button type="submit">Revoke Admin</button>
+                    </form>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <p>No member list available (DB not configured or empty).</p>
+          {% endif %}
+
+          <p><a href="{{ url_for('index') }}">Back to site</a></p>
+        {% endblock %}

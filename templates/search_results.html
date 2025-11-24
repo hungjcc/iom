@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Search results{% if q %} for "{{ q }}"{% endif %}</h2>
+
+  {% if results %}
+    <table class="results-table" aria-label="Search results">
+      <thead>
+        <tr>
+          <th>Item Title (For Sales)</th>
+          <th>Current bid</th>
+          <th>End Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+          <tr>
+            <td><a href="{{ url_for('view_auction', item_id=r.id if r.id is defined else r.get('id', 0)) }}">{{ r.title }}</a></td>
+            <td>{{ r.current_bid }}</td>
+            <td>{{ r.end_time }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="results-empty">No results found.</div>
+  {% endif %}
+
+{% endblock %}

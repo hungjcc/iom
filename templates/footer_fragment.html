@@ -1,0 +1,21 @@
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <a href="{{ url_for('index') }}">Home</a>
+    <span class="sep">|</span>
+    <a href="{{ url_for('sell') }}">Sell an item</a>
+    <span class="sep">|</span>
+    {% if u_name %}
+      <a href="{{ url_for('user_menu') }}">Member information update</a>
+      <span class="sep">|</span>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+      <a href="{{ url_for('register') }}">Register now</a>
+      <span class="sep">|</span>
+      <a href="{{ url_for('user_login') }}">Login</a>
+    {% endif %}
+    <span class="sep">|</span>
+    <a href="{{ url_for('contact') }}">Contact us</a>
+
+    <div class="copyright">&copy; 2001-{{ current_year }}, IOM Internet Online Marketplace</div>
+  </div>
+</footer>

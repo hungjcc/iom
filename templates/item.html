@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-card-md">
+  {% if not item %}
+    <h1>Auction not available</h1>
+    <p>This auction could not be found or the server is not configured for DB-backed auctions.</p>
+    <p><a href="{{ url_for('auctions') }}">Back to auctions</a></p>
+  {% else %}
+  <div class="item-photo">
+    <style>
+      .gallery { display:flex; flex-direction:column; align-items:center; }
+      .gallery-main { max-width:700px; max-height:500px; }
+      .thumb-strip { margin-top:8px; display:flex; gap:8px; overflow-x:auto; }
+      .thumb-strip img { width:100px; height:70px; object-fit:cover; cursor:pointer; border:1px solid #ddd; }
+      .thumb-controls { display:flex; flex-direction:column; gap:4px; margin-left:4px; }
+      .thumb-item { display:flex; align-items:center; }
+      .thumb-action { background:#eee;border:1px solid #ccc;padding:2px 6px;margin-left:4px;cursor:pointer }
+    </style>
+    <div class="gallery">
+      <img id="main-image" class="gallery-main" src="{{ (images[0].variants.webp if images and images[0].get('variants') and images[0]['variants'].get('webp')) or (images[0].thumb_url if images and images[0].get('thumb_url') ) or (item.image_url if item.image_url is defined else url_for('static', filename='photo/' ~ item.item_id ~ '.jpg')) }}" alt="item photo" onerror="this.onerror=null;this.src='/static/placeholder.png'">
+
+      <div class="thumb-strip" id="thumb-strip">
+        {% if images and images|length > 0 %}
+          {% for img in images %}
+            <div class="thumb-item" data-img-id="{{ img.img_id }}">
+              <img src="{{ img.variants.thumb_small if img.get('variants') and img['variants'].get('thumb_small') else (img.thumb_url or img.image_url) }}" alt="thumb-{{ loop.index0 }}" onclick="swapMain(this)">
+              {% if u_name and (u_name == item.get('seller_id') or session.get('user_id') == item.get('seller_id')) %}
+                <div class="thumb-controls">
+                  <button class="thumb-action" onclick="moveImage({{ item.item_id }}, {{ img.img_id }}, 'left'); return false;">◀</button>
+                  <button class="thumb-action" onclick="moveImage({{ item.item_id }}, {{ img.img_id }}, 'right'); return false;">▶</button>
+                  <button class="thumb-action" onclick="deleteImage({{ item.item_id }}, {{ img.img_id }}); return false;">Delete</button>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <img src="{{ item.image_url if item.image_url is defined else url_for('static', filename='photo/' ~ item.id ~ '.jpg') }}" alt="item photo" onerror="this.onerror=null;this.src='/static/placeholder.png'">
+        {% endif %}
+      </div>
+    </div>
+    <script>
+      function swapMain(el){
+        var src = el.getAttribute('src');
+        var main = document.getElementById('main-image');
+        if(main) main.src = src;
+      }
+
+      async function deleteImage(itemId, imgId){
+        if(!confirm('Delete this image?')) return;
+        try{
+          const res = await fetch(`/auction/${itemId}/images/${imgId}/delete`, {method:'POST'});
+          if(res.ok){ location.reload(); } else { alert('Delete failed'); }
+        }catch(e){ alert('Delete failed'); }
+      }
+
+      async function moveImage(itemId, imgId, dir){
+        // build current order
+        var strip = document.getElementById('thumb-strip');
+        var ids = Array.from(strip.querySelectorAll('.thumb-item')).map(function(n){ return parseInt(n.getAttribute('data-img-id')) });
+        var i = ids.indexOf(imgId);
+        if(i === -1) return;
+        var j = (dir === 'left') ? Math.max(0, i-1) : Math.min(ids.length-1, i+1);
+        // swap
+        var t = ids[i]; ids[i] = ids[j]; ids[j] = t;
+        // submit new order
+        try{
+          var form = new FormData();
+          form.append('order', ids.join(','));
+          const res = await fetch(`/auction/${itemId}/images/reorder`, {method:'POST', body: form});
+          if(res.ok){ location.reload(); } else { alert('Reorder failed'); }
+        }catch(e){ alert('Reorder failed'); }
+      }
+    </script>
+  </div>
+  <h1>{{ item.title }}</h1>
+  <p><strong>Seller:</strong> {{ item.seller_id or 'Unknown' }}</p>
+  <p><strong>Reserve price:</strong> {{ item.current_bid }}</p>
+  <p><strong>Duration (days):</strong> {{ item.duration }}</p>
+  <p><strong>Status:</strong> {{ item.status }}</p>
+  <hr>
+  <h3>Item description</h3>
+  <p>{{ item.description }}</p>
+  <hr>
+  <h3>Current highest bid</h3>
+  <p>
+    {% if highest_bid %}
+      {{ highest_bid.a_s_price }} by user {{ highest_bid.a_m_id }}
+    {% else %}
+      No bids yet
+    {% endif %}
+  </p>
+  <hr>
+  <h3>Place a bid</h3>
+  {# Compute a suggested minimum: use highest_bid.a_s_price if present, otherwise item.current_bid #}
+  {% set raw_price = (highest_bid.a_s_price if highest_bid is defined and highest_bid else (item.current_bid if item.current_bid is defined else 0)) %}
+  {% set raw_str = (raw_price|string).replace('$','').replace(',','').strip() %}
+  {% set current = 0 %}
+  {% if raw_str %}
+    {% set _ = current.__class__ %}
+    {# Try to parse as float; fall back to 0 on error #}
+    {% set current = (raw_str | float) if raw_str|length > 0 else 0 %}
+  {% endif %}
+  {% set suggested = (current + 1) | round(2) %}
+
+  <form method="post" action="{{ url_for('place_bid_route', auction_id=item.id) }}">
+    <label for="bid-amount">Your bid amount ({{ currency_label }}):</label>
+    <input id="bid-amount" name="amount" type="number" step="0.01" min="{{ '%.2f' % suggested }}" required placeholder="{{ '%.2f' % suggested }}">
+    <button type="submit">Place Bid</button>
+  </form>
+  <hr>
+  <hr>
+  <p><a href="{{ url_for('index') }}">Back to home</a></p>
+
+</div>
+  {% endif %}
+
+{% endblock %}

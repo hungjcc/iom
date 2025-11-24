@@ -1,0 +1,9 @@
+{# logout.html - user is logged out and redirected #}
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+window.location.href = "/";
+</script>
+<p>You have been logged out. Redirecting to home...</p>
+{% endblock %}

@@ -1,0 +1,891 @@
+2025-11-21 23:10:04,727 ERROR Registration failed for jenn
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 267, in register
+    new_id = create_member(username, password, first_name, last_name, email)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 323, in create_member
+    conn = get_connection()
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 53, in get_connection
+    raise RuntimeError('Set ODBC_DSN or ODBC_CONN (and optional DB_USER/DB_PASS)')
+RuntimeError: Set ODBC_DSN or ODBC_CONN (and optional DB_USER/DB_PASS)
+2025-11-21 23:14:57,225 ERROR Registration failed for jennifer
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 267, in register
+    new_id = create_member(username, password, first_name, last_name, email)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 323, in create_member
+    conn = get_connection()
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 34, in get_connection
+    return pyodbc.connect(conn_env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.InterfaceError: ('IM002', '[IM002] [Microsoft][ODBC 驅動程式管理員] 找不到資料來源名稱且未指定預設的驅動程式 (0) (SQLDriverConnect)')
+2025-11-21 23:46:12,730 INFO Successful login for alice
+2025-11-22 00:36:50,714 INFO Admin grant blocked: member id=99 status=P
+2025-11-22 00:44:50,517 INFO Successful login for alice
+2025-11-22 00:47:17,890 INFO Successful login for alice
+2025-11-22 00:47:53,859 INFO Confirmation email (no SMTP configured) to alice@example.com: Confirm your registration
+
+Thanks for registering. Please confirm your account by visiting the link below:
+
+http://127.0.0.1:5000/confirm/eyJtX2lkIjozfQ.aSCXuQ.MR361E8001HMmoEiwxHezyMGMGY
+
+If you did not request this, ignore this message.
+2025-11-22 00:48:20,116 INFO Successful login for alice
+2025-11-22 00:52:58,635 INFO Failed login 1 for admin
+2025-11-22 00:53:15,707 INFO Successful login for admin
+2025-11-22 00:53:27,836 INFO Admin unlocked account alice
+2025-11-22 00:53:28,931 INFO Admin unlocked account alice
+2025-11-22 00:53:29,527 INFO Admin unlocked account alice
+2025-11-22 01:13:32,570 INFO Successful login for admin
+2025-11-22 01:33:21,657 INFO Successful login for alice
+2025-11-22 23:25:17,703 INFO Successful login for jennifer
+2025-11-23 11:17:36,858 INFO Successful login for alice
+2025-11-23 11:18:16,706 INFO Successful login for admin
+2025-11-23 11:23:16,719 INFO Successful login for admin
+2025-11-23 11:24:03,683 INFO Successful login for admin
+2025-11-23 11:27:03,873 INFO Successful login for andycheng
+2025-11-23 13:27:02,085 INFO Successful login for andycheng
+2025-11-23 13:28:23,187 ERROR Failed to create item/auction
+Traceback (most recent call last):
+  File "c:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 533, in new_auction
+    item_id = create_item(title, desc, owner_id=seller_id, category=category or None, sub_category=sub_category or None)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 785, in create_item
+    cur.execute(sql, tuple(vals))
+pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The column name 'i_cat' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code. (264) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The column name 'i_s_cat' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code. (264); [42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+2025-11-23 13:28:48,591 ERROR Failed to create item/auction
+Traceback (most recent call last):
+  File "c:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 533, in new_auction
+    item_id = create_item(title, desc, owner_id=seller_id, category=category or None, sub_category=sub_category or None)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 785, in create_item
+    cur.execute(sql, tuple(vals))
+pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The column name 'i_s_cat' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code. (264) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+2025-11-23 16:28:55,706 INFO Successful login for andycheng
+2025-11-23 16:32:59,490 ERROR Failed to create item/auction
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 560, in new_auction
+    item_id = create_item(title, desc, owner_id=seller_id, category=category or None, sub_category=sub_category or None)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 785, in create_item
+    cur.execute(sql, tuple(vals))
+pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The column name 'i_cat' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code. (264) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The column name 'i_s_cat' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code. (264); [42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+2025-11-23 16:36:38,092 ERROR Failed to create item/auction
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 560, in new_auction
+    item_id = create_item(title, desc, owner_id=seller_id, category=category or None, sub_category=sub_category or None)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 785, in create_item
+    cur.execute(sql, tuple(vals))
+pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The column name 'i_s_cat' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code. (264) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+2025-11-23 16:44:48,090 ERROR Failed to create item/auction
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 560, in new_auction
+    item_id = create_item(title, desc, owner_id=seller_id, category=category or None, sub_category=sub_category or None)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 785, in create_item
+    cur.execute(sql, tuple(vals))
+pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The column name 'i_cat' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code. (264) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The column name 'i_s_cat' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code. (264); [42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+2025-11-23 16:49:49,904 ERROR create_item_and_auction raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 561, in new_auction
+    result = create_item_and_auction(title, desc, seller_id=seller_id, starting_price=starting_price, end_date=end_date, category=category or None, sub_category=sub_category or None)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 1047, in create_item_and_auction
+    cur.execute(sql, tuple(vals))
+pyodbc.DataError: ('22018', "[22018] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Conversion failed when converting the nvarchar value 'watch' to data type int. (245) (SQLExecDirectW)")
+2025-11-23 22:01:25,215 INFO Successful login for alice
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+
+create_item_and_auction result: None
+
+create_item_and_auction called with: {'title': 'E2E test direct', 'description': 'desc', 'seller_id': 1, 'starting_price': 1.0, 'end_date': None, 'category': None, 'sub_category': None, 'image_path': None}
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+
+create_item_and_auction called with: {'title': 'E2E Test Item', 'description': 'This is a test upload from automated E2E script', 'seller_id': 1, 'starting_price': 10.0, 'end_date': datetime.datetime(2025, 11, 24, 14, 10, 37, 914400), 'category': '2', 'sub_category': None, 'image_path': None}
+
+create_item_and_auction: failed to determine auction_id for item_id=42.
+
+create_item_and_auction result: None
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+2025-11-23 22:11:36,318 ERROR Failed to create item/auction
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 590, in new_auction
+    from db import create_item_and_auction, set_item_image
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 1245
+    try:
+    ^^^
+SyntaxError: expected 'except' or 'finally' block
+
+create_item_and_auction called with: {'title': 'E2E test direct', 'description': 'desc', 'seller_id': 1, 'starting_price': 1.0, 'end_date': None, 'category': None, 'sub_category': None, 'image_path': None}
+
+INSERT INTO dbo.auction without end_date; vals: (43, 1, 1.0, datetime.datetime(2025, 11, 23, 14, 23, 58, 629786))
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+
+create_item_and_auction called with: {'title': 'E2E Test Item', 'description': 'This is a test upload from automated E2E script', 'seller_id': 1, 'starting_price': 10.0, 'end_date': datetime.datetime(2025, 11, 24, 14, 23, 58, 732448), 'category': '2', 'sub_category': None, 'image_path': None}
+
+INSERT INTO dbo.auction with end_date; vals: (44, 1, 10.0, datetime.datetime(2025, 11, 23, 14, 23, 58, 800542), datetime.datetime(2025, 11, 24, 14, 23, 58, 732448))
+
+create_item_and_auction: failed to determine auction_id for item_id=44.
+
+create_item_and_auction result: None
+
+create_item_and_auction called with: {'title': 'E2E test direct', 'description': 'desc', 'seller_id': 1, 'starting_price': 1.0, 'end_date': None, 'category': None, 'sub_category': None, 'image_path': None}
+
+INSERT INTO dbo.auction without end_date; vals: (45, 1, 1.0, datetime.datetime(2025, 11, 23, 14, 26, 55, 304570))
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+
+create_item_and_auction called with: {'title': 'E2E Test Item', 'description': 'This is a test upload from automated E2E script', 'seller_id': 1, 'starting_price': 10.0, 'end_date': datetime.datetime(2025, 11, 24, 14, 26, 55, 400891), 'category': '2', 'sub_category': None, 'image_path': None}
+
+INSERT INTO dbo.auction with end_date; vals: (46, 1, 10.0, datetime.datetime(2025, 11, 23, 14, 26, 55, 461216), datetime.datetime(2025, 11, 24, 14, 26, 55, 400891))
+
+auction INSERT failed (primary path) exception: ('42S22', "[42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Invalid column name 'a_e_date'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 1198, in create_item_and_auction
+    cur.execute(sql, (item_id, seller_id, starting_price, datetime.utcnow(), end_date))
+pyodbc.ProgrammingError: ('42S22', "[42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Invalid column name 'a_e_date'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+
+create_item_and_auction: failed to determine auction_id for item_id=46.
+
+create_item_and_auction result: None
+
+create_item_and_auction called with: {'title': 'E2E test direct', 'description': 'desc', 'seller_id': 1, 'starting_price': 1.0, 'end_date': None, 'category': None, 'sub_category': None, 'image_path': None}
+
+Executing auction INSERT; cols=['a_item_id', 'a_m_id', 'a_s_price', 'a_s_date'] vals=[47, 1, 1.0, datetime.datetime(2025, 11, 23, 14, 34, 6, 749997)] sql='INSERT INTO dbo.auction (a_item_id, a_m_id, a_s_price, a_s_date) OUTPUT INSERTED.a_id VALUES (?, ?, ?, ?)'
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+
+create_item_and_auction called with: {'title': 'E2E Test Item', 'description': 'This is a test upload from automated E2E script', 'seller_id': 1, 'starting_price': 10.0, 'end_date': datetime.datetime(2025, 11, 24, 14, 34, 6, 844264), 'category': '2', 'sub_category': None, 'image_path': None}
+
+Executing auction INSERT; cols=['a_item_id', 'a_m_id', 'a_s_price', 'a_s_date'] vals=[48, 1, 10.0, datetime.datetime(2025, 11, 23, 14, 34, 6, 933808)] sql='INSERT INTO dbo.auction (a_item_id, a_m_id, a_s_price, a_s_date) OUTPUT INSERTED.a_id VALUES (?, ?, ?, ?)'
+
+create_item_and_auction result: (31, 48)
+
+create_item_and_auction called with: {'title': 'E2E test direct', 'description': 'desc', 'seller_id': 1, 'starting_price': 1.0, 'end_date': None, 'category': None, 'sub_category': None, 'image_path': None}
+
+Executing auction INSERT; cols=['a_item_id', 'a_m_id', 'a_s_price', 'a_s_date'] vals=[49, 1, 1.0, datetime.datetime(2025, 11, 23, 14, 36, 45, 401890)] sql='INSERT INTO dbo.auction (a_item_id, a_m_id, a_s_price, a_s_date) OUTPUT INSERTED.a_id VALUES (?, ?, ?, ?)'
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+
+create_item_and_auction called with: {'title': 'E2E Test Item', 'description': 'This is a test upload from automated E2E script', 'seller_id': 1, 'starting_price': 10.0, 'end_date': datetime.datetime(2025, 11, 24, 14, 36, 45, 485398), 'category': 2, 'sub_category': None, 'image_path': None}
+
+Executing auction INSERT; cols=['a_item_id', 'a_m_id', 'a_s_price', 'a_s_date'] vals=[50, 1, 10.0, datetime.datetime(2025, 11, 23, 14, 36, 45, 571765)] sql='INSERT INTO dbo.auction (a_item_id, a_m_id, a_s_price, a_s_date) OUTPUT INSERTED.a_id VALUES (?, ?, ?, ?)'
+
+create_item_and_auction result: (33, 50)
+
+create_item_and_auction called with: {'title': 'E2E test direct', 'description': 'desc', 'seller_id': 1, 'starting_price': 1.0, 'end_date': None, 'category': None, 'sub_category': None, 'image_path': None}
+
+Executing auction INSERT; cols=['a_item_id', 'a_m_id', 'a_s_price', 'a_s_date'] vals=[51, 1, 1.0, datetime.datetime(2025, 11, 23, 14, 37, 6, 602265)] sql='INSERT INTO dbo.auction (a_item_id, a_m_id, a_s_price, a_s_date) OUTPUT INSERTED.a_id VALUES (?, ?, ?, ?)'
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+
+create_item_and_auction called with: {'title': 'E2E Test Item', 'description': 'This is a test upload from automated E2E script', 'seller_id': 1, 'starting_price': 10.0, 'end_date': datetime.datetime(2025, 11, 24, 14, 37, 6, 666774), 'category': 2, 'sub_category': None, 'image_path': None}
+
+Executing auction INSERT; cols=['a_item_id', 'a_m_id', 'a_s_price', 'a_s_date'] vals=[52, 1, 10.0, datetime.datetime(2025, 11, 23, 14, 37, 6, 742775)] sql='INSERT INTO dbo.auction (a_item_id, a_m_id, a_s_price, a_s_date) OUTPUT INSERTED.a_id VALUES (?, ?, ?, ?)'
+
+create_item_and_auction result: (35, 52)
+
+create_item_and_auction called with: {'title': 'E2E test direct', 'description': 'desc', 'seller_id': 1, 'starting_price': 1.0, 'end_date': None, 'category': None, 'sub_category': None, 'image_path': None}
+
+Executing auction INSERT; cols=['a_item_id', 'a_m_id', 'a_s_price', 'a_s_date'] vals=[53, 1, 1.0, datetime.datetime(2025, 11, 23, 14, 37, 37, 680711)] sql='INSERT INTO dbo.auction (a_item_id, a_m_id, a_s_price, a_s_date) OUTPUT INSERTED.a_id VALUES (?, ?, ?, ?)'
+
+==== NEW_AUCTION_FORM ====
+{'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}
+files: ['e2e_test.png']
+====
+
+create_item_and_auction called with: {'title': 'E2E Test Item', 'description': 'This is a test upload from automated E2E script', 'seller_id': 1, 'starting_price': 10.0, 'end_date': datetime.datetime(2025, 11, 24, 14, 37, 37, 741713), 'category': 2, 'sub_category': None, 'image_path': None}
+
+Executing auction INSERT; cols=['a_item_id', 'a_m_id', 'a_s_price', 'a_s_date'] vals=[54, 1, 10.0, datetime.datetime(2025, 11, 23, 14, 37, 37, 826864)] sql='INSERT INTO dbo.auction (a_item_id, a_m_id, a_s_price, a_s_date) OUTPUT INSERTED.a_id VALUES (?, ?, ?, ?)'
+
+create_item_and_auction result: (37, 54)
+2025-11-23 22:47:14,799 ERROR create_item_and_auction EXCEPTION; form_snapshot={'title': 'E2E Test Item', 'desc': 'This is a test upload from automated E2E script', 'category': '2', 'starting_price': '10.00', 'duration': '1'}; exception=('23000', "[23000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot insert the value NULL into column 'i_m_id', table 'sqldb-test-myproject.dbo.item'; column does not allow nulls. INSERT fails. (515) (SQLExecDirectW); [23000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The statement has been terminated. (3621)")
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 614, in new_auction
+    result = create_item_and_auction(title, desc, seller_id=seller_id, starting_price=starting_price, end_date=end_date, category=cat_val, sub_category=subcat_val)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\db.py", line 1136, in create_item_and_auction
+    cur.execute("INSERT INTO dbo.item DEFAULT VALUES")
+pyodbc.IntegrityError: ('23000', "[23000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot insert the value NULL into column 'i_m_id', table 'sqldb-test-myproject.dbo.item'; column does not allow nulls. INSERT fails. (515) (SQLExecDirectW); [23000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The statement has been terminated. (3621)")
+2025-11-23 22:57:59,586 INFO Failed login 1 for alice
+2025-11-23 22:58:21,160 INFO Successful login for alice
+Coercion: could not convert field sub_category value='music' to int; sending None instead
+2025-11-23 23:05:21,338 INFO Successful login for admin
+2025-11-23 23:09:35,491 INFO Successful login for admin
+2025-11-23 23:09:38,225 INFO Admin grant blocked: member id=99 status=P
+2025-11-23 23:13:21,517 INFO Successful login for admin
+2025-11-23 23:13:24,396 INFO Admin grant blocked: member id=99 status=P
+2025-11-23 23:14:19,495 INFO Successful login for admin
+2025-11-23 23:14:22,496 INFO Admin grant blocked: member id=99 status=P
+2025-11-23 23:26:03,445 INFO Successful login for admin
+2025-11-23 23:26:06,490 INFO Admin grant blocked: member id=99 status=P
+2025-11-23 23:29:37,535 INFO Successful login for admin
+2025-11-23 23:29:40,788 INFO Admin grant blocked: member id=99 status=P
+2025-11-23 23:30:15,551 INFO Successful login for admin
+2025-11-23 23:30:18,841 INFO Admin grant blocked: member id=99 status=P
+2025-11-23 23:31:39,378 INFO Successful login for admin
+2025-11-23 23:31:42,789 INFO Admin grant blocked: member id=99 status=P
+2025-11-23 23:32:06,582 INFO Successful login for admin
+2025-11-23 23:32:31,605 INFO Successful login for admin
+2025-11-23 23:33:02,175 INFO Successful login for admin
+2025-11-23 23:33:50,139 INFO Successful login for admin
+2025-11-23 23:34:29,810 INFO Successful login for admin
+2025-11-23 23:34:32,603 INFO Admin grant blocked: member id=99 status=P
+2025-11-23 23:34:52,886 INFO Successful login for admin
+2025-11-23 23:34:56,413 INFO Admin grant blocked: member id=99 status=P
+2025-11-23 23:35:53,434 INFO Successful login for andycheng
+2025-11-24 00:06:01,126 ERROR Template rendering failed in /auctions: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 316, in auctions
+    return render_template('auction_browse.html', items=sample_items)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\base.html", line 23, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 23, in block 'content'
+    <p>No auctions found. Try <a href="{{ url_for('auctions') }}">Browse</a> or visit the <a href="{{ url_for('help_page') }}">Help</a> page.</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+2025-11-24 00:06:01,196 ERROR Template rendering failed in /auctions: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 316, in auctions
+    return render_template('auction_browse.html', items=sample_items)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\base.html", line 23, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 23, in block 'content'
+    <p>No auctions found. Try <a href="{{ url_for('auctions') }}">Browse</a> or visit the <a href="{{ url_for('help_page') }}">Help</a> page.</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+2025-11-24 00:08:55,189 WARNING get_auctions failed in /: ('08001', '[08001] [Microsoft][ODBC Driver 18 for SQL Server]TCP 提供者: 逾時錯誤 [258].  (258) (SQLDriverConnect); [08001] [Microsoft][ODBC Driver 18 for SQL Server]登入逾時終止 (0); [08001] [Microsoft][ODBC Driver 18 for SQL Server]無效的連線字串屬性 (0); [08001] [Microsoft][ODBC Driver 18 for SQL Server]因為登入回應發生延遲，無法完成登入過程。 (258)')
+2025-11-24 00:09:25,957 INFO Successful login for andycheng
+2025-11-24 00:12:57,276 INFO Failed login 1 for admin
+2025-11-24 00:13:59,100 ERROR Unexpected error in /admin: admin.html
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: admin.html
+2025-11-24 00:14:00,011 ERROR Unexpected error in /admin: admin.html
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: admin.html
+2025-11-24 00:15:30,444 INFO Failed login 1 for admin
+2025-11-24 00:15:37,781 INFO Failed login 2 for admin
+2025-11-24 00:15:54,384 INFO Failed login 3 for admin
+2025-11-24 00:18:14,307 INFO Successful login for andycheng
+2025-11-24 00:18:21,698 ERROR Unexpected error in /admin: admin.html
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: admin.html
+2025-11-24 00:18:22,286 ERROR Unexpected error in /admin: admin.html
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: admin.html
+2025-11-24 00:21:29,234 INFO Failed login 1 for admin
+2025-11-24 00:24:07,673 ERROR Unexpected error in /admin: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 27, in top-level template code
+    <form method="post" action="{{ url_for('admin_resend') }}" style="display:inline">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+2025-11-24 00:24:13,851 ERROR Unexpected error in /admin: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 27, in top-level template code
+    <form method="post" action="{{ url_for('admin_resend') }}" style="display:inline">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+2025-11-24 00:24:14,592 ERROR Unexpected error in /admin: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 27, in top-level template code
+    <form method="post" action="{{ url_for('admin_resend') }}" style="display:inline">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+2025-11-24 00:25:02,653 INFO Successful login for andycheng
+2025-11-24 00:25:06,809 ERROR Unexpected error in /admin: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 27, in top-level template code
+    <form method="post" action="{{ url_for('admin_resend') }}" style="display:inline">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+2025-11-24 00:25:07,418 ERROR Unexpected error in /admin: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 27, in top-level template code
+    <form method="post" action="{{ url_for('admin_resend') }}" style="display:inline">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'admin_resend'. Did you mean 'admin' instead?
+2025-11-24 00:25:30,285 INFO Failed login 1 for admin
+2025-11-24 00:25:40,713 INFO Successful login for andycheng
+2025-11-24 00:26:09,729 INFO Failed login 1 for admin
+2025-11-24 00:28:24,105 INFO Failed login 1 for admin
+2025-11-24 00:30:48,653 INFO Failed login 1 for admin
+2025-11-24 00:31:33,619 INFO Successful login for andycheng
+2025-11-24 00:31:36,729 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:31:37,990 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:35:20,233 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:35:21,107 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:35:22,223 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:35:22,617 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:35:22,783 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:35:22,986 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:35:23,177 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:35:23,340 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:35:23,517 ERROR Unexpected error in /admin: block 'content' defined twice
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 454, in admin
+    return render_template('admin_panel.html', user=user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\loaders.py", line 138, in load
+    code = environment.compile(source, name, filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\admin_panel.html", line 64, in template
+    {% block content %}
+jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
+2025-11-24 00:45:01,552 INFO Successful login for andycheng
+2025-11-24 00:47:18,051 INFO Failed login 1 for admin
+2025-11-24 00:47:57,652 INFO Failed login 1 for admin
+2025-11-24 00:50:16,576 INFO Successful login for andycheng

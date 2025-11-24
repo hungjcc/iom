@@ -1,0 +1,262 @@
+{
+  "schemas": {
+    "auction": {
+      "table_schema": "dbo",
+      "table_name": "auction",
+      "columns": [
+        {
+          "column_name": "a_id",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 1
+        },
+        {
+          "column_name": "a_item_id",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 2
+        },
+        {
+          "column_name": "a_m_id",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 3
+        },
+        {
+          "column_name": "a_s_price",
+          "data_type": "decimal",
+          "char_max_length": null,
+          "numeric_precision": 18,
+          "numeric_scale": 2,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 4
+        },
+        {
+          "column_name": "a_s_date",
+          "data_type": "datetime2",
+          "char_max_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": "(sysutcdatetime())",
+          "ordinal_position": 5
+        }
+      ],
+      "primary_key": [
+        "a_id"
+      ]
+    },
+    "item": {
+      "table_schema": "dbo",
+      "table_name": "item",
+      "columns": [
+        {
+          "column_name": "i_id",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 1
+        },
+        {
+          "column_name": "i_m_id",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 2
+        },
+        {
+          "column_name": "i_title",
+          "data_type": "nvarchar",
+          "char_max_length": 255,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 3
+        },
+        {
+          "column_name": "i_desc",
+          "data_type": "nvarchar",
+          "char_max_length": -1,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 4
+        },
+        {
+          "column_name": "i_b_price",
+          "data_type": "decimal",
+          "char_max_length": null,
+          "numeric_precision": 18,
+          "numeric_scale": 2,
+          "is_nullable": "NO",
+          "column_default": "((0.00))",
+          "ordinal_position": 5
+        },
+        {
+          "column_name": "i_duration",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "NO",
+          "column_default": "((7))",
+          "ordinal_position": 6
+        },
+        {
+          "column_name": "i_ship_fee",
+          "data_type": "char",
+          "char_max_length": 1,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": "('B')",
+          "ordinal_position": 7
+        },
+        {
+          "column_name": "i_ship_out",
+          "data_type": "char",
+          "char_max_length": 1,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": "('N')",
+          "ordinal_position": 8
+        },
+        {
+          "column_name": "i_pay_way",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 9
+        },
+        {
+          "column_name": "i_cat",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 10
+        },
+        {
+          "column_name": "i_s_cat",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 11
+        },
+        {
+          "column_name": "i_s_date",
+          "data_type": "datetime2",
+          "char_max_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": "(sysutcdatetime())",
+          "ordinal_position": 12
+        },
+        {
+          "column_name": "i_status",
+          "data_type": "char",
+          "char_max_length": 1,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": "('P')",
+          "ordinal_position": 13
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "datetime2",
+          "char_max_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": "(sysutcdatetime())",
+          "ordinal_position": 14
+        }
+      ],
+      "primary_key": [
+        "i_id"
+      ]
+    }
+  },
+  "analysis": {
+    "join_suggestions": {
+      "item_primary_key": [
+        "i_id"
+      ],
+      "auction_fk_candidates": [
+        "a_id",
+        "a_item_id",
+        "a_m_id"
+      ],
+      "suggested_pairs": [
+        {
+          "auction_col": "a_id",
+          "item_pk": "i_id"
+        },
+        {
+          "auction_col": "a_item_id",
+          "item_pk": "i_id"
+        },
+        {
+          "auction_col": "a_m_id",
+          "item_pk": "i_id"
+        }
+      ]
+    },
+    "item_field_suggestions": {
+      "title": "i_title",
+      "description": "i_desc",
+      "image": null,
+      "primary_key": [
+        "i_id"
+      ],
+      "available_columns": [
+        "i_id",
+        "i_m_id",
+        "i_title",
+        "i_desc",
+        "i_b_price",
+        "i_duration",
+        "i_ship_fee",
+        "i_ship_out",
+        "i_pay_way",
+        "i_cat",
+        "i_s_cat",
+        "i_s_date",
+        "i_status",
+        "created_at"
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-card-sm">
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% else %}
+    <h1>Place a bid for: {{ item.title }}</h1>
+    <p>Reserve price: {{ item.current_bid }}</p>
+
+    <form method="post" action="{{ url_for('auction_result') }}">
+      <input type="hidden" name="item_id" value="{{ item.id }}">
+      <label for="bid_amount">Your bid amount ({{ currency_label }}):</label>
+      <input type="text" id="bid_amount" name="bid_amount" placeholder="{{ currency_symbol }}0.00">
+      <input type="hidden" name="bidder" value="anonymous">
+      <div class="mt-18">
+        <button type="submit">Place bid</button>
+      </div>
+    </form>
+  {% endif %}
+  <p><a href="{{ url_for('view_auction', item_id=item.id) }}">Back to item</a></p>
+</div>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{
+  "schemas": {
+    "users": {
+      "table_schema": "dbo",
+      "table_name": "users",
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 1
+        },
+        {
+          "column_name": "name",
+          "data_type": "nvarchar",
+          "char_max_length": 255,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 2
+        },
+        {
+          "column_name": "age",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 3
+        }
+      ],
+      "primary_key": [
+        "id"
+      ]
+    }
+  },
+  "analysis": {
+    "note": "Both \"auction\" and \"item\" schemas are required for join suggestions. Include --tables auction item"
+  }
+}

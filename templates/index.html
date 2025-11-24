@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="center-card">
+    <h1>Welcome to the Auction</h1>
+    <p class="muted-note">Browse recent auctions on the site. Use the search or category selector above to filter results.</p>
+
+    {% if recent_auctions %}
+      <h3>Recent auctions</h3>
+      <div class="auction-grid">
+        {% for a in recent_auctions %}
+          <div class="auction-card">
+            <img class="auction-thumb" src="{{ a.image_url }}" alt="{{ a.title }}">
+            <div class="auction-body">
+              <div class="auction-title"><a href="{{ a.url }}">{{ a.title }}</a></div>
+              <div class="auction-meta">Seller: {{ a.seller_id or 'N/A' }}</div>
+              <p class="muted-note">{{ a.description[:120] }}{% if a.description|length > 120 %}...{% endif %}</p>
+            </div>
+            <div class="auction-cta">
+              <span class="auction-price">{{ a.current_bid }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <h3>Categories</h3>
+      <ul>
+        {% for id, name in categories %}
+          <li>{{ name }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endblock %}

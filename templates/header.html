@@ -1,0 +1,55 @@
+<header class="site-header">
+  <div class="container header-top">
+    <div class="logo">
+      <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo.gif') }}" alt="logo"></a>
+    </div>
+    <div class="banner">
+      <img src="{{ url_for('static', filename='banner2.gif') }}" alt="banner">
+    </div>
+  </div>
+
+  <nav class="site-nav">
+    <div class="container nav-inner">
+      <a href="{{ url_for('index') }}">Home</a>
+      <span class="sep">|</span>
+      <a href="{{ url_for('sell') }}">Sell an item</a>
+      <span class="sep">|</span>
+      {% if u_name %}
+        <a href="{{ url_for('user_menu') }}">Member information update</a>
+        <span class="sep">|</span>
+        <a href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('register') }}">Register now</a>
+        <span class="sep">|</span>
+        <a href="{{ url_for('user_login') }}">Login</a>
+      {% endif %}
+      <span class="sep">|</span>
+      <a href="{{ url_for('contact') }}">Contact</a>
+    </div>
+  </nav>
+
+  <div class="container header-bottom">
+    <div class="search">
+      <!-- Search endpoint removed; redirect queries to auctions listing as a best-effort fallback -->
+      <form name="search" action="{{ url_for('auctions') }}" method="get">
+        <input type="hidden" name="id">
+        <label class="visually-hidden">Search</label>
+        <input type="text" name="key_word" placeholder="Search auctions" aria-label="Search auctions">
+        <button type="submit">GO!</button>
+      </form>
+    </div>
+
+    <div class="browse">
+      <form name="browse" action="{{ url_for('auctions') }}" method="get">
+        <input type="hidden" name="id">
+        <label class="visually-hidden">Browse</label>
+        {% include 'categories_select_box.html' %}
+        <button type="submit">GO!</button>
+      </form>
+    </div>
+
+    <div class="date">
+      <div class="date-text">{{ actual_date() }}</div>
+    </div>
+  </div>
+</header>

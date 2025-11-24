@@ -1,0 +1,128 @@
+/* Minimal responsive styles for the demo app */
+:root{--max-width:1200px;--accent:#000066;--muted:#EEEEEE}
+body{font-family:Georgia, 'Times New Roman', serif;margin:0;color:#111}
+.container{width:100%;max-width:var(--max-width);margin:0 auto;padding:0 12px;box-sizing:border-box}
+.site-header{background:#fff}
+.header-top{display:flex;justify-content:space-between;align-items:center;padding:12px 0;background:var(--muted)}
+.header-top .logo img{max-width:200px;height:auto;display:block}
+.header-top .banner img{max-width:600px;width:100%;height:auto}
+.site-nav{background:var(--accent);}
+.nav-inner{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;padding:8px 12px}
+.nav-inner a{color:#fff;text-decoration:none;margin:0 8px;font-size:14px}
+.nav-inner .sep{color:#fff;margin:0 6px}
+.header-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;padding:10px 0;background:var(--muted)}
+.header-bottom .search,.header-bottom .browse{flex:1 1 260px;min-width:200px;margin-right:12px}
+.header-bottom .date{flex:0 0 180px;text-align:right;min-width:140px}
+.header-bottom input[type="text"]{padding:6px;border:1px solid #ccc;border-radius:3px}
+.header-bottom button{padding:6px 10px;margin-left:6px;border-radius:3px;border:1px solid #08428C;background:#08428C;color:#fff}
+.date-text{color:#08428C;font-size:13px}
+.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+/* Responsive tweaks */
+@media (max-width:768px){
+  .header-top{flex-direction:column;gap:8px}
+  .header-top .logo img{max-width:160px}
+  .header-bottom{flex-direction:column}
+  .header-bottom .date{text-align:left;margin-top:8px}
+}
+@media (max-width:420px){
+  .nav-inner{font-size:13px;padding:6px}
+  .header-top .banner img{display:none}
+}
+
+/* content padding moved from inline styles */
+.content{padding:20px}
+
+/* Skip link */
+.skip-link{position:absolute;left:12px;top:8px;background:#000;color:#fff;padding:6px 10px;border-radius:4px;z-index:1000;transform:translateY(-120%);transition:transform .18s ease}
+.skip-link:focus{transform:translateY(0);outline:3px solid #fff}
+
+/* Footer styles */
+.site-footer{background:#000066;color:#fff;padding:12px 0;margin-top:18px}
+.site-footer .container{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px}
+.site-footer a{color:#fff;text-decoration:none;margin:0 6px;font-size:13px}
+.site-footer .sep{color:#fff}
+.site-footer .copyright{width:100%;text-align:center;margin-top:8px;font-size:13px}
+
+/* Results table styles */
+.results-table{width:100%;border-collapse:collapse;margin-top:12px}
+.results-table th,.results-table td{border:1px solid #ddd;padding:8px;text-align:left}
+.results-table th{background:#000066;color:#fff}
+.results-empty{text-align:center;color:#666;padding:18px}
+
+/* Utility layout classes used by converted templates */
+.center-card{max-width:960px;margin:0 auto;padding:20px}
+.center-card-sm{max-width:800px;margin:0 auto;padding:20px}
+.center-card-md{max-width:900px;margin:0 auto;padding:20px}
+.mt-18{margin-top:18px}
+.mb-16{margin-bottom:16px}
+
+/* Items table for browse pages */
+.items-table{width:100%;border-collapse:collapse}
+.items-table th,.items-table td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+.items-table th{border-bottom:1px solid #ddd}
+
+/* Two-column layout used by converted index template */
+.layout-two-column{display:flex;gap:20px;align-items:flex-start}
+.layout-two-column .sidebar{flex:0 0 240px}
+.layout-two-column .main-list{flex:1 1 60%}
+.card{background:#fff;padding:12px;border:1px solid #e6e6e6;border-radius:6px}
+.category-list{list-style:none;padding:0;margin:0}
+.category-list li{margin:6px 0}
+.auction-list{list-style:none;padding:0;margin:0}
+.auction-list li{padding:6px 0;border-bottom:1px solid #f0f0f0}
+
+/* Zebra rows for results */
+.results-table tbody tr:nth-child(odd){background:#f9f9f9}
+.results-table tbody tr:nth-child(even){background:#ffffff}
+
+/* Small utility */
+.row-0{background:#ffffff}
+.row-1{background:#f9f9f9}
+
+/* Login form and messages */
+.login-form input[type="text"], .login-form input[type="password"]{padding:6px;border:1px solid #ccc;border-radius:3px;width:100%;max-width:320px}
+.login-form button{padding:6px 10px;border-radius:3px;border:1px solid #08428C;background:#08428C;color:#fff}
+.error{color:#fff;background:#c0392b;padding:8px;border-radius:4px;display:inline-block;margin-bottom:8px}
+.info{color:#08428C;background:#eef6fb;padding:8px;border-radius:4px;display:inline-block;margin-bottom:8px}
+.success{color:#155724;background:#d4edda;padding:8px;border-radius:4px;display:inline-block;margin-bottom:8px}
+
+/* Item photo helpers */
+.item-photo{ text-align:center; margin-bottom:16px }
+.item-photo-img{ max-width:300px; max-height:300px; height:auto }
+/* Form controls styling to improve legacy converted forms */
+.form-card{max-width:900px;margin:0 auto;padding:20px;border-radius:8px;border:1px solid #e6e6e6;background:#fff}
+.form-group{margin-bottom:14px;display:flex;flex-direction:column}
+.form-group label{font-weight:600;margin-bottom:6px}
+.form-control{padding:8px;border:1px solid #ccc;border-radius:4px;font-size:14px}
+.form-control[type="file"]{padding:6px}
+.form-actions{display:flex;gap:8px;align-items:center;margin-top:12px}
+.btn-primary{background:#08428C;color:#fff;border:1px solid #06376a;padding:8px 12px;border-radius:4px;cursor:pointer}
+.btn-secondary{background:#f0f0f0;color:#111;border:1px solid #ddd;padding:8px 12px;border-radius:4px;cursor:pointer}
+.help-text{font-size:0.9em;color:#666;margin-top:6px }
+
+/* Auction card grid */
+.auction-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:18px}
+.auction-card{border:1px solid #e6e6e6;border-radius:8px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.auction-thumb{width:100%;height:160px;object-fit:cover;background:#f7f7f7}
+.auction-body{padding:12px;flex:1 1 auto}
+.auction-title{font-weight:700;margin:0 0 6px;font-size:1.05rem}
+.auction-meta{color:#666;font-size:0.95rem;margin-bottom:8px}
+.auction-cta{padding:12px;border-top:1px solid #f0f0f0;background:#fafafa;text-align:right}
+.auction-price{font-weight:700;color:#08428C}
+/* Utility helpers */
+.text-center{ text-align:center }
+.muted-note{ color:#666; font-size:0.9em }
+
+/* Flash message container and variants */
+.flash-messages{margin-bottom:12px}
+.flash{display:block;padding:10px;border-radius:4px;margin-bottom:8px;color:#fff}
+.flash.success{background:#28a745;color:#fff}
+.flash.error{background:#dc3545;color:#fff}
+.flash.info{background:#17a2b8;color:#fff}
+
+/* 404 page specific tweaks */
+.error-404{padding:48px 18px;text-align:center;background:linear-gradient(180deg,#fbfbfd,#ffffff);border-radius:8px}
+.error-404 h1{color:#08428C;font-size:2.6rem;margin:0 0 0.6rem}
+.error-404 p{color:#555;font-size:1.05rem;margin:0 0 1rem}
+.error-404 .btn{display:inline-block;padding:10px 14px;border-radius:6px;background:#08428C;color:#fff;text-decoration:none;margin:6px 8px}
+@media (max-width:420px){.error-404{padding:28px 12px}.error-404 h1{font-size:1.8rem}}

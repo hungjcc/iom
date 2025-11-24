@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-card">
+  <h1>Browse items</h1>
+
+  <div class="mb-16">
+    <strong>Categories:</strong>
+    {% for c in categories %}
+      {% if selected_cat is not none and (selected_cat|string) == (c.c_id|string) %}
+        <strong>{{ c.c_desc }}</strong>
+      {% else %}
+        <a href="{{ url_for('auctions') }}?id={{ c.c_id }}">{{ c.c_desc }}</a>
+      {% endif %}
+      {% if not loop.last %} | {% endif %}
+    {% endfor %}
+  </div>
+
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Start date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for it in items %}
+      <tr>
+        <td><a href="{{ url_for('view_auction', item_id=it.id) }}">{{ it.title }}</a></td>
+        <td>{{ it.start_date }}</td>
+        <td>{{ it.status }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="3">No items found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="mt-18"><a href="/">Back to home</a></p>
+
+</div>
+
+{% endblock %}

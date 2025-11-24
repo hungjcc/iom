@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Auction Browse{% endblock %}
+
+{% block content %}
+<main id="main" class="center-card">
+	<header class="text-center">
+		<h1>Auction Browse</h1>
+		<p class="muted-note">Browse current auctions. This page was modernized to the site layout.</p>
+	</header>
+
+	<section class="items-grid" aria-live="polite">
+		{% for item in items|default([]) %}
+			<article class="item-card">
+				<a class="item-link" href="{{ item.url if item.url is defined else url_for('view_auction', item_id=(item.id if item.id is defined else item.item_id)) }}">
+					<img class="item-photo" src="{{ item.image_url if item.image_url is defined else url_for('static', filename='placeholder.png') }}" alt="{{ item.title if item.title is defined else 'Auction item' }}">
+					<h2 class="item-title">{{ item.title if item.title is defined else 'Untitled' }}</h2>
+				</a>
+				<p class="muted-note">Current bid: {{ item.current_bid if item.current_bid is defined else 'N/A' }}</p>
+			</article>
+		{% else %}
+			<div class="center-card-sm">
+				<p>No auctions found. Try <a href="{{ url_for('auctions') }}">Browse</a> or visit the <a href="{{ url_for('help_page') }}">Help</a> page.</p>
+			</div>
+		{% endfor %}
+	</section>
+</main>
+{% endblock %}

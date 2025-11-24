@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-card">
+  <h1>User Menu (placeholder)</h1>
+  <p>This page was converted from <code>user_menu.php</code>. Implement real content in the Flask route if needed.</p>
+  <ul>
+    <li><a href="{{ url_for('register') }}">Register</a></li>
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    <li><a href="{{ url_for('user_agreement') }}">User agreement</a></li>
+  </ul>
+</div>
+{% endblock %}

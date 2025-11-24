@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-card-md">
+  <h1>Search</h1>
+  <form method="get" action="{{ url_for('search') }}">
+    <input type="text" name="q" value="{{ q }}" placeholder="Search items...">
+    <button type="submit">Search</button>
+  </form>
+
+  {% if q %}
+    <h2>Results for "{{ q }}"</h2>
+    {% if results %}
+      <ul>
+      {% for it in results %}
+        <li><a href="{{ url_for('view_auction', item_id=it.id) }}">{{ it.title }}</a></li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>No results found.</p>
+    {% endif %}
+  {% endif %}
+
+  <p><a href="/">Back to home</a></p>
+
+</div>
+
+{% endblock %}

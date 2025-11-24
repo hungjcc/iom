@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-card text-center">
+  <h2>Legacy page: {{ page }}</h2>
+  <p>This page was requested as a legacy PHP file. A converted Flask/Jinja template was not found yet.</p>
+  <p>If a backup of the original PHP exists, you can find it in <code>iom/php_backup/</code>.</p>
+  <p>
+    <a href="/">Return to homepage</a>
+  </p>
+  <hr>
+  <p class="muted-note">Developer note: To finish conversion, create a template named <code>{{ page[:-4] }}.html</code> or add a specific route in <code>app.py</code>.</p>
+
+</div>
+
+{% endblock %}

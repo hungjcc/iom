@@ -1,0 +1,31 @@
+{# Converted from template_index_php.html #}
+<!--
+  This template expects variables:
+  - categories: list of dicts with 'c_id' and 'c_desc'
+    - last_auctions: list of dicts with 'id', 'title', 'start_date'
+-->
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="layout-two-column">
+        <aside class="sidebar">
+            <div class="card">
+                <h3>Categories</h3>
+                <ul class="category-list">
+                    {% for cat in categories %}
+                        <li><a href="{{ url_for('auctions') }}?id={{ cat.c_id }}">{{ cat.c_desc }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </aside>
+
+        <section class="main-list">
+            <h2>Latest Auctions</h2>
+            <ul class="auction-list">
+                {% for auction in last_auctions %}
+                    <li><a href="{{ url_for('view_auction', item_id=auction.id) }}">{{ auction.title }}</a> ({{ auction.start_date }})</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+{% endblock %}

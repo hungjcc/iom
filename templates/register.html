@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Register</h2>
+
+  {% if already %}
+    <div class="info">You are already logged in as <strong>{{ u_name }}</strong>.</div>
+  {% else %}
+
+    {% if success %}
+      <div id="form-message" class="success" role="status" aria-live="polite">Registration successful — logged in as <strong>{{ username }}</strong>.</div>
+    {% endif %}
+
+    {% if message %}
+      <div id="form-message" class="error" role="alert" aria-live="assertive">{{ message }}</div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('register') }}" class="register-form" {% if message or success %}aria-describedby="form-message"{% endif %}>
+      <div>
+        <label for="username">Username</label><br>
+        <input id="username" name="username" type="text" value="{{ request.form.username or '' }}">
+      </div>
+      <div>
+        <label for="password">Password</label><br>
+        <input id="password" name="password" type="password">
+      </div>
+      <div>
+        <label for="confirm">Confirm Password</label><br>
+        <input id="confirm" name="confirm" type="password">
+      </div>
+      <div class="mt-18">
+          <button type="submit">Register</button>
+        </div>
+    </form>
+
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,163 @@
+{
+  "schemas": {
+    "member": {
+      "table_schema": "dbo",
+      "table_name": "member",
+      "columns": [
+        {
+          "column_name": "m_id",
+          "data_type": "int",
+          "char_max_length": null,
+          "numeric_precision": 10,
+          "numeric_scale": 0,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 1
+        },
+        {
+          "column_name": "m_login_id",
+          "data_type": "nvarchar",
+          "char_max_length": 100,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 2
+        },
+        {
+          "column_name": "m_pass",
+          "data_type": "nvarchar",
+          "char_max_length": 255,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": null,
+          "ordinal_position": 3
+        },
+        {
+          "column_name": "m_f_name",
+          "data_type": "nvarchar",
+          "char_max_length": 100,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 4
+        },
+        {
+          "column_name": "m_l_name",
+          "data_type": "nvarchar",
+          "char_max_length": 100,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 5
+        },
+        {
+          "column_name": "m_email",
+          "data_type": "nvarchar",
+          "char_max_length": 255,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 6
+        },
+        {
+          "column_name": "m_birth",
+          "data_type": "date",
+          "char_max_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 7
+        },
+        {
+          "column_name": "m_address1",
+          "data_type": "nvarchar",
+          "char_max_length": 255,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 8
+        },
+        {
+          "column_name": "m_address2",
+          "data_type": "nvarchar",
+          "char_max_length": 255,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 9
+        },
+        {
+          "column_name": "m_address3",
+          "data_type": "nvarchar",
+          "char_max_length": 255,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 10
+        },
+        {
+          "column_name": "m_phone",
+          "data_type": "nvarchar",
+          "char_max_length": 50,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 11
+        },
+        {
+          "column_name": "m_card_no",
+          "data_type": "nvarchar",
+          "char_max_length": 50,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 12
+        },
+        {
+          "column_name": "m_card_expire",
+          "data_type": "nvarchar",
+          "char_max_length": 10,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "YES",
+          "column_default": null,
+          "ordinal_position": 13
+        },
+        {
+          "column_name": "m_status",
+          "data_type": "char",
+          "char_max_length": 1,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": "('A')",
+          "ordinal_position": 14
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "datetime2",
+          "char_max_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "is_nullable": "NO",
+          "column_default": "(sysutcdatetime())",
+          "ordinal_position": 15
+        }
+      ],
+      "primary_key": [
+        "m_id"
+      ]
+    }
+  }
+}

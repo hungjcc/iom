@@ -1,0 +1,10 @@
+{# sell_login_required.html - shown if user is not logged in #}
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-card text-center mt-18">
+	<h2>Sell an item</h2>
+	<p>Please login before selling your item.</p>
+	<p><a href="{{ url_for('user_login') }}">Login</a></p>
+</div>
+{% endblock %}
