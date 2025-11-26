@@ -451,18 +451,25 @@ def admin():
         abort(403)
     # Optionally load member list for the main admin page too
     members = None
+    auctions = None
     if USE_DB:
         try:
             from db import get_all_members
             members = get_all_members() or []
         except Exception:
             members = None
-    try:
-        # Prefer the `admin_panel.html` template if present
         try:
-            return render_template('admin_panel_fixed.html', user=user, members=members)
+            from db import get_auctions
+            auctions = get_auctions(limit=50) or []
         except Exception:
-            return render_template('admin_panel.html', user=user, members=members)
+            auctions = None
+
+    try:
+        # Prefer the `admin_panel_fixed.html` template if present
+        try:
+            return render_template('admin_panel_fixed.html', user=user, members=members, auctions=auctions)
+        except Exception:
+            return render_template('admin_panel.html', user=user, members=members, auctions=auctions)
     except FileNotFoundError:
         logger.warning('admin_panel.html template not found; returning text fallback')
         # Minimal fallback page with links to common admin actions
@@ -570,6 +577,28 @@ def admin_resend():
             flash('Failed to send confirmation email (server error).', 'error')
     else:
         flash('Member email not found or DB not configured.', 'error')
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/auction/<int:a_id>/delete', methods=['POST'])
+def admin_delete_auction(a_id):
+    """Admin-only endpoint to permanently delete an auction and its bids."""
+    user = _require_admin()
+    if isinstance(user, tuple):
+        return user
+    if not USE_DB:
+        flash('DB not configured; cannot delete auctions.', 'error')
+        return redirect(url_for('admin'))
+    try:
+        from db import delete_auction_and_bids
+        deleted_auctions, deleted_bids = delete_auction_and_bids(a_id)
+        if deleted_auctions:
+            flash(f'Deleted auction {a_id} and {deleted_bids} bids.', 'success')
+        else:
+            flash(f'No auction row deleted for id {a_id}.', 'warning')
+    except Exception as e:
+        logger.exception('admin_delete_auction failed: %s', e)
+        flash('Failed to delete auction (server error).', 'error')
     return redirect(url_for('admin'))
 
 
@@ -685,6 +714,54 @@ def admin_members():
         return render_template('admin_panel.html', user=user, members=members)
 
 
+
+@app.route('/admin/auction/<int:a_id>/housekeep', methods=['POST'])
+def admin_auction_housekeep(a_id):
+    """Admin-only endpoint to perform housekeeping on an auction.
+
+    Actions supported (via form field `action`):
+      - close: set end date to now and mark closed
+      - reopen: clear end date and mark open
+      - set_end_date: expects form `end_date` (ISO format)
+      - extend_days: expects form `days` (int)
+      - cancel: mark cancelled and set end date to now
+      - set_status: expects form `status`
+    """
+    user = _require_admin()
+    if isinstance(user, tuple):
+        return user
+    action = request.form.get('action') or request.args.get('action')
+    if not action:
+        flash('Action is required for housekeeping.', 'error')
+        return redirect(url_for('admin'))
+    # collect params
+    params = {}
+    if 'end_date' in request.form:
+        params['end_date'] = request.form.get('end_date')
+    if 'days' in request.form:
+        try:
+            params['days'] = int(request.form.get('days'))
+        except Exception:
+            params['days'] = None
+    if 'status' in request.form:
+        params['status'] = request.form.get('status')
+
+    if USE_DB:
+        try:
+            from db import update_auction_housekeeping
+            ok = update_auction_housekeeping(a_id, action, params)
+            if ok:
+                flash(f'Auction {a_id} updated: {action}', 'success')
+            else:
+                flash(f'No changes applied for auction {a_id}.', 'warning')
+        except Exception as e:
+            logger.exception('admin_auction_housekeep failed: %s', e)
+            flash('Failed to perform housekeeping (server error).', 'error')
+    else:
+        flash('DB not configured; cannot perform housekeeping.', 'error')
+    return redirect(url_for('admin'))
+
+
 @app.route('/auction/<int:item_id>')
 @app.route('/auctions/<int:item_id>')
 def view_auction(item_id):
@@ -740,7 +817,15 @@ def place_bid_route(auction_id):
         return redirect(url_for('user_login'))
     amount = request.form.get('amount') or request.form.get('bid')
     if not amount:
+        flash('No bid amount provided.', 'error')
         return redirect(url_for('view_auction', item_id=auction_id))
+    # parse bid amount
+    try:
+        bid_val = float(amount)
+    except Exception:
+        flash('Invalid bid amount.', 'error')
+        return redirect(url_for('view_auction', item_id=auction_id))
+
     bidder_id = user.get('id') or user.get('m_id')
     if not bidder_id and USE_DB and get_user_by_username:
         try:
@@ -750,20 +835,110 @@ def place_bid_route(auction_id):
             bidder_id = None
     if not bidder_id:
         return redirect(url_for('user_login'))
+
     if USE_DB:
         try:
-            from db import place_bid
-            ok = place_bid(auction_id, bidder_id, amount)
+            # Check auction existence and status first for clearer messages
+            from db import get_auction, get_connection, place_bid
+            auc = None
+            try:
+                auc = get_auction(auction_id)
+            except Exception:
+                auc = None
+            if not auc:
+                flash('Auction not found.', 'error')
+                return redirect(url_for('auctions'))
+
+            # If auction read helper provides status/end_time, use it
+            try:
+                if auc.get('status') and str(auc.get('status')).lower() in ('closed', 'c', 'cancelled', 'cancel'):
+                    flash('This auction is closed and no longer accepts bids.', 'error')
+                    return redirect(url_for('view_auction', item_id=auction_id))
+                end_time = auc.get('end_time')
+                from datetime import datetime
+                if end_time and isinstance(end_time, datetime) and end_time <= datetime.utcnow():
+                    flash('This auction has ended and no longer accepts bids.', 'error')
+                    return redirect(url_for('view_auction', item_id=auction_id))
+            except Exception:
+                # ignore and continue
+                pass
+
+            # Determine current highest bid numeric value
+            current = 0.0
+            try:
+                conn = get_connection()
+                cur = conn.cursor()
+                try:
+                    cur.execute("SELECT MAX(b_amount) AS maxb FROM dbo.bid WHERE b_a_id = ?", (auction_id,))
+                    row = cur.fetchone()
+                    if row:
+                        try:
+                            current = float(getattr(row, 'maxb') or 0)
+                        except Exception:
+                            current = float(row[0] or 0)
+                except Exception:
+                    try:
+                        cur.execute("SELECT MAX(amount) AS maxb FROM dbo.bid WHERE auction_id = ?", (auction_id,))
+                        row = cur.fetchone()
+                        if row:
+                            try:
+                                current = float(getattr(row, 'maxb') or 0)
+                            except Exception:
+                                current = float(row[0] or 0)
+                    except Exception:
+                        current = 0.0
+                finally:
+                    try:
+                        conn.close()
+                    except Exception:
+                        pass
+            except Exception:
+                current = 0.0
+
+            # Fallback to auction starting price when no bids
+            if current == 0.0:
+                try:
+                    # try common auction starting price column
+                    from db import get_connection as _gc
+                    cconn = _gc()
+                    ccur = cconn.cursor()
+                    try:
+                        ccur.execute("SELECT a_s_price FROM dbo.auction WHERE a_id = ?", (auction_id,))
+                        r = ccur.fetchone()
+                        if r:
+                            try:
+                                current = float(getattr(r, 'a_s_price') or 0)
+                            except Exception:
+                                current = float(r[0] or 0)
+                    finally:
+                        try:
+                            cconn.close()
+                        except Exception:
+                            pass
+                except Exception:
+                    current = 0.0
+
+            # If bid is not higher than current, provide a clearer message
+            if bid_val <= current:
+                symbol = os.getenv('CURRENCY_SYMBOL', 'HK$')
+                flash(f'Your bid must be higher than the current highest bid ({symbol}{current:.2f}).', 'error')
+                return redirect(url_for('view_auction', item_id=auction_id))
+
+            # Attempt to place the bid
+            ok = place_bid(auction_id, bidder_id, bid_val)
             if ok:
                 flash('Your bid was placed successfully.', 'success')
             else:
-                flash('Your bid was not accepted (too low or an error).', 'error')
+                flash('Your bid was not accepted (it may be too low or the auction is closed).', 'error')
             return redirect(url_for('view_auction', item_id=auction_id))
         except Exception as e:
             logger.exception(f'Place bid failed: {e}')
             if app.debug:
                 flash(f'Bid failed: {e}', 'error')
+            else:
+                flash('Bid failed due to a server error.', 'error')
             return redirect(url_for('view_auction', item_id=auction_id))
+    # Non-DB fallback: redirect back to auction page
     return redirect(url_for('view_auction', item_id=auction_id))
 
 

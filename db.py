@@ -1,7 +1,8 @@
 import os
 import logging
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timedelta
+import math
 
 try:
     import pyodbc
@@ -159,11 +160,88 @@ def get_auctions(limit=50):
             pass
 
         current_bid = _pick_first(['a_s_price', 'current_bid', 'price', 'starting_price'], data)
-        current_bid = _format_money(current_bid)
+        # Determine the current highest bid for this auction when possible.
+        # Prefer the bid table's MAX(b_amount) when an auction id is available.
+        highest_bid_val = None
+        try:
+            aid = data.get('a_id') or data.get('a_item_id')
+            if aid is not None:
+                try:
+                    # Use a fresh cursor to avoid disturbing the outer cursor state
+                    bid_cur = conn.cursor()
+                    bid_cur.execute("SELECT MAX(b_amount) AS maxb FROM dbo.bid WHERE b_a_id = ?", (aid,))
+                    br = bid_cur.fetchone()
+                    if br:
+                        try:
+                            highest_bid_val = float(getattr(br, 'maxb') or 0)
+                        except Exception:
+                            try:
+                                highest_bid_val = float(br[0] or 0)
+                            except Exception:
+                                highest_bid_val = None
+                except Exception:
+                    highest_bid_val = None
+        except Exception:
+            highest_bid_val = None
+
+        if highest_bid_val is not None and highest_bid_val > 0:
+            current_bid = _format_money(highest_bid_val)
+        else:
+            current_bid = _format_money(current_bid)
 
         seller = data.get('a_m_id') or data.get('seller_id') or None
 
         start_date = data.get('a_s_date') or data.get('start_date')
+
+        # Attempt to discover an end-time or a duration value from the row using
+        # common candidate column names. Compute a friendly duration in days
+        # when both start and end datetimes are available.
+        end_time = _pick_first(['a_e_date', 'end_date', 'a_end', 'a_e'], data)
+        # duration may be stored explicitly in some schemas
+        duration_raw = _pick_first(['duration', 'a_duration', 'i_duration', 'length', 'days'], data)
+        duration = None
+
+        # If both datetimes are present prefer computing duration from them (authoritative)
+        try:
+            if end_time is not None and start_date is not None:
+                if isinstance(end_time, datetime) and isinstance(start_date, datetime):
+                    delta = end_time - start_date
+                    # Round up partial days so a remaining 1 hour counts as 1 day
+                    duration = max(0, int(math.ceil(delta.total_seconds() / 86400)))
+        except Exception:
+            duration = None
+
+        # Fallback: use explicit duration value from the row when present
+        try:
+            if duration is None and duration_raw is not None:
+                # normalize numeric-like durations to integer days
+                duration = int(duration_raw)
+        except Exception:
+            duration = None
+
+        # determine status: prefer explicit status column when present,
+        # otherwise derive from end_time.
+        raw_status = _pick_first(['a_status', 'status', 'state'], data)
+        status = None
+        try:
+            if raw_status is not None:
+                s = str(raw_status).strip()
+                ls = s.lower()
+                if ls in ('closed', 'c'):
+                    status = 'closed'
+                elif ls in ('cancelled', 'cancel'):
+                    status = 'cancelled'
+                elif ls in ('open', 'o'):
+                    status = 'open'
+                else:
+                    status = s
+            else:
+                status = 'open'
+                if end_time is not None and isinstance(end_time, datetime):
+                    if end_time <= now:
+                        status = 'closed'
+        except Exception:
+            status = 'open'
 
         out.append({
                 'id': int(data.get('a_id')) if data.get('a_id') is not None else None,
@@ -174,10 +252,11 @@ def get_auctions(limit=50):
             'current_bid': current_bid,
             'seller_id': int(seller) if seller is not None else None,
             'start_date': start_date,
-                'end_time': None,
+                'end_time': end_time,
+                'duration': duration,
                 # Friendly URL for the item view route; avoid importing Flask here.
                 'url': f"/auction/{int(data.get('a_id')) if data.get('a_id') is not None else (data.get('a_item_id') or '')}",
-            'status': 'open',
+            'status': status,
         })
 
     conn.close()
@@ -227,8 +306,77 @@ def get_auction(auction_id):
                 image = first.get('image_url') or first.get('thumb_url') or image
     except Exception:
         pass
-    current_bid = _format_money(_pick_first(['a_s_price', 'current_bid', 'price', 'starting_price'], data))
+    # Default current bid value from the auction row (starting/current price)
+    current_bid = _pick_first(['a_s_price', 'current_bid', 'price', 'starting_price'], data)
+    # Try to pick up the current highest bid from the bid table
+    try:
+        aid = data.get('a_id')
+        highest_bid_val = None
+        if aid is not None:
+            cur.execute("SELECT MAX(b_amount) AS maxb FROM dbo.bid WHERE b_a_id = ?", (aid,))
+            r = cur.fetchone()
+            if r:
+                try:
+                    highest_bid_val = float(getattr(r, 'maxb') or 0)
+                except Exception:
+                    try:
+                        highest_bid_val = float(r[0] or 0)
+                    except Exception:
+                        highest_bid_val = None
+        if highest_bid_val is not None and highest_bid_val > 0:
+            current_bid = _format_money(highest_bid_val)
+        else:
+            current_bid = _format_money(current_bid)
+    except Exception:
+        # fallback to formatting whatever we found in the row
+        current_bid = _format_money(current_bid)
     seller = data.get('a_m_id') or data.get('seller_id') or None
+
+    start_date = data.get('a_s_date') or data.get('start_date')
+    end_time = _pick_first(['a_e_date', 'end_date', 'a_end', 'a_e'], data)
+    duration_raw = _pick_first(['duration', 'a_duration', 'i_duration', 'length', 'days'], data)
+    duration = None
+
+    # Prefer computing duration from datetimes when available
+    try:
+        if end_time is not None and start_date is not None:
+            if isinstance(end_time, datetime) and isinstance(start_date, datetime):
+                delta = end_time - start_date
+                duration = max(0, int(math.ceil(delta.total_seconds() / 86400)))
+    except Exception:
+        duration = None
+
+    # Fallback to explicit duration field
+    try:
+        if duration is None and duration_raw is not None:
+            duration = int(duration_raw)
+    except Exception:
+        duration = None
+
+    # determine status: prefer explicit status column when present,
+    # otherwise derive from end_time.
+    raw_status = _pick_first(['a_status', 'status', 'state'], data)
+    status = None
+    try:
+        if raw_status is not None:
+            s = str(raw_status).strip()
+            ls = s.lower()
+            if ls in ('closed', 'c'):
+                status = 'closed'
+            elif ls in ('cancelled', 'cancel'):
+                status = 'cancelled'
+            elif ls in ('open', 'o'):
+                status = 'open'
+            else:
+                status = s
+        else:
+            status = 'open'
+            now = datetime.utcnow()
+            if end_time is not None and isinstance(end_time, datetime):
+                if end_time <= now:
+                    status = 'closed'
+    except Exception:
+        status = 'open'
 
     return {
         'id': int(data.get('a_id')) if data.get('a_id') is not None else None,
@@ -238,11 +386,77 @@ def get_auction(auction_id):
         'image_url': image,
         'current_bid': current_bid,
         'seller_id': int(seller) if seller is not None else None,
-        'start_date': data.get('a_s_date'),
-        'end_time': None,
+        'start_date': start_date,
+        'end_time': end_time,
+        'duration': duration,
         'url': f"/auction/{int(data.get('a_id')) if data.get('a_id') is not None else (data.get('a_item_id') or '')}",
-        'status': 'open',
+        'status': status,
     }
+
+
+def delete_auction_and_bids(auction_id: int):
+    """Delete bids for an auction and the auction row itself.
+
+    Returns a tuple: (deleted_auctions_count, deleted_bids_count).
+    Raises on unexpected errors.
+    """
+    conn = get_connection()
+    cur = conn.cursor()
+    deleted_bids = 0
+    deleted_auctions = 0
+    try:
+        try:
+            cur.execute('BEGIN TRANSACTION')
+        except Exception:
+            pass
+
+        # Delete bids (best-effort). Support common column variants.
+        for bid_where in ('b_a_id', 'auction_id', 'b_auction_id', 'a_id'):
+            try:
+                cur.execute(f'DELETE FROM dbo.bid WHERE {bid_where} = ?', (auction_id,))
+                # Use first successful delete result
+                deleted_bids = cur.rowcount
+                break
+            except Exception:
+                deleted_bids = 0
+
+        # Delete auction row: try several common id column names and sum results
+        deleted_auctions = 0
+        auction_columns = ('a_id', 'id', 'auction_id', 'aA_id')
+        for col in auction_columns:
+            try:
+                cur.execute(f'DELETE FROM dbo.auction WHERE {col} = ?', (auction_id,))
+                # Some drivers return -1 for rowcount when unknown; treat negatives as unknown
+                rc = cur.rowcount if isinstance(cur.rowcount, int) and cur.rowcount >= 0 else 0
+                deleted_auctions += rc
+            except Exception:
+                # ignore and try next
+                continue
+
+        if deleted_auctions == 0:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+            return (0, deleted_bids)
+
+        conn.commit()
+        return (deleted_auctions, deleted_bids)
+    except Exception:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        raise
+    finally:
+        try:
+            cur.close()
+        except Exception:
+            pass
+        try:
+            conn.close()
+        except Exception:
+            pass
 
 
 def url_for_static_placeholder():
@@ -610,6 +824,33 @@ def place_bid(auction_id, bidder_m_id, amount):
     conn = get_connection()
     cur = conn.cursor()
     try:
+        # Check auction status / end date first to prevent bids on closed auctions.
+        try:
+            cur.execute("SELECT * FROM dbo.auction WHERE a_id = ?", (auction_id,))
+            arow = cur.fetchone()
+            if arow:
+                adata = _row_to_dict(cur, arow)
+                # pick common end-date and status column names
+                end_time = _pick_first(['a_e_date', 'end_date', 'a_end', 'a_e'], adata)
+                status = _pick_first(['a_status', 'status', 'state'], adata)
+                try:
+                    now = datetime.utcnow()
+                    if end_time is not None and isinstance(end_time, datetime) and end_time <= now:
+                        # auction already ended
+                        return False
+                except Exception:
+                    pass
+                try:
+                    if status is not None and str(status).lower() in ('closed', 'c', 'cancelled', 'cancel'):
+                        return False
+                except Exception:
+                    pass
+            else:
+                # no such auction
+                return False
+        except Exception:
+            # if this check fails, continue defensively to attempt normal bid flow
+            pass
         # Determine current highest bid; try dbo.bid then fallback to dbo.auction starting price
         current = 0.0
         try:
@@ -1457,6 +1698,151 @@ def set_item_image(item_id, image_path):
         except Exception:
             pass
     return False
+
+
+def update_auction_housekeeping(a_id, action, params=None):
+    """Perform admin housekeeping actions on an auction row.
+
+    action: one of 'close', 'reopen', 'set_end_date', 'extend_days', 'cancel', 'set_status'
+    params: dict containing required params for the action (e.g., {'end_date': datetime} or {'days': 3})
+
+    Returns True if any row was updated, False otherwise.
+    """
+    if pyodbc is None:
+        raise RuntimeError('pyodbc is not installed')
+    params = params or {}
+    conn = get_connection()
+    cur = conn.cursor()
+    updated = 0
+    try:
+        # discover likely column names for end-date and status
+        cur.execute("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='dbo' AND TABLE_NAME='auction'")
+        cols = [r[0].lower() for r in cur.fetchall()]
+        end_candidates = ['a_e_date', 'end_date', 'a_end', 'a_e']
+        status_candidates = ['a_status', 'status', 'state']
+        end_col = None
+        status_col = None
+        for c in end_candidates:
+            if c in cols:
+                end_col = c
+                break
+        for c in status_candidates:
+            if c in cols:
+                status_col = c
+                break
+
+        # If there's no explicit status column but we're performing an action
+        # that requires persisting status (cancel / set_status), attempt to
+        # add a durable `a_status` column so admin state is explicit.
+        if status_col is None and action in ('cancel', 'set_status'):
+            try:
+                cur.execute(
+                    "ALTER TABLE dbo.auction ADD a_status NVARCHAR(64) NULL"
+                )
+                conn.commit()
+                # refresh columns list and mark status_col
+                cur = conn.cursor()
+                cur.execute("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='dbo' AND TABLE_NAME='auction'")
+                cols = [r[0].lower() for r in cur.fetchall()]
+                if 'a_status' in cols:
+                    status_col = 'a_status'
+            except Exception:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
+
+        now = datetime.utcnow()
+
+        # Helper to run an update safely when column exists
+        def _update_col(col, value):
+            nonlocal updated
+            try:
+                cur.execute(f"UPDATE dbo.auction SET {col} = ? WHERE a_id = ?", (value, a_id))
+                updated = (cur.rowcount or 0) or updated
+                conn.commit()
+            except Exception:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
+
+        if action == 'close':
+            # set end date to now and optionally set status to closed
+            if end_col:
+                _update_col(end_col, now)
+            if status_col:
+                _update_col(status_col, 'closed')
+
+        elif action == 'reopen':
+            # clear end date and set status to open
+            if end_col:
+                _update_col(end_col, None)
+            if status_col:
+                _update_col(status_col, 'open')
+
+        elif action == 'set_end_date':
+            ed = params.get('end_date')
+            if isinstance(ed, str):
+                try:
+                    ed = datetime.fromisoformat(ed)
+                except Exception:
+                    ed = None
+            if ed is None:
+                # nothing to do
+                return False
+            if end_col:
+                _update_col(end_col, ed)
+
+        elif action == 'extend_days':
+            days = params.get('days')
+            try:
+                days = int(days)
+            except Exception:
+                days = None
+            if days is None:
+                return False
+            # fetch current end date; if missing, try start date + days
+            cur.execute("SELECT a_s_date, " + (end_col or "NULL") + " FROM dbo.auction WHERE a_id = ?", (a_id,))
+            row = cur.fetchone()
+            if not row:
+                return False
+            a_s_date = None
+            a_e_date = None
+            try:
+                a_s_date = row[0]
+                if end_col and len(row) > 1:
+                    a_e_date = row[1]
+            except Exception:
+                pass
+            base = a_e_date or a_s_date
+            if not base:
+                return False
+            try:
+                new_end = base + timedelta(days=days)
+            except Exception:
+                return False
+            if end_col:
+                _update_col(end_col, new_end)
+
+        elif action == 'cancel':
+            # mark as cancelled and set end date to now
+            if status_col:
+                _update_col(status_col, 'cancelled')
+            if end_col:
+                _update_col(end_col, now)
+
+        elif action == 'set_status':
+            st = params.get('status')
+            if st and status_col:
+                _update_col(status_col, st)
+
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+    return (updated is None) or (updated > 0)
 
 
 def add_item_image(item_id, image_url, thumb_url=None, sort_order=0):

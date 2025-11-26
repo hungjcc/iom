@@ -889,3 +889,176 @@ jinja2.exceptions.TemplateAssertionError: block 'content' defined twice
 2025-11-24 00:47:18,051 INFO Failed login 1 for admin
 2025-11-24 00:47:57,652 INFO Failed login 1 for admin
 2025-11-24 00:50:16,576 INFO Successful login for andycheng
+2025-11-25 21:37:31,672 WARNING get_auctions failed in /: ('08001', '[08001] [Microsoft][ODBC Driver 18 for SQL Server]TCP 提供者: 逾時錯誤 [258].  (258) (SQLDriverConnect); [08001] [Microsoft][ODBC Driver 18 for SQL Server]登入逾時終止 (0); [08001] [Microsoft][ODBC Driver 18 for SQL Server]無效的連線字串屬性 (0); [08001] [Microsoft][ODBC Driver 18 for SQL Server]因為登入回應發生延遲，無法完成登入過程。 (258)')
+2025-11-25 21:38:24,666 INFO Successful login for andycheng
+2025-11-25 21:38:54,838 ERROR Unexpected error in /user_menu
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 428, in user_menu
+    return render_template('user_menu.html', username=session.get('u_name'))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\user_menu.html", line 2, in top-level template code
+    {% include 'legacy/user_menu.html' %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\legacy\user_menu.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\base.html", line 23, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\legacy\user_menu.html", line 10, in block 'content'
+    <li><a href="{{ url_for('user_agreement') }}">User agreement</a></li>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'user_agreement'. Did you mean 'user_menu' instead?
+2025-11-25 21:40:34,673 ERROR Unexpected error in /user_menu
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 428, in user_menu
+    return render_template('user_menu.html', username=session.get('u_name'))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\user_menu.html", line 2, in top-level template code
+    {% include 'legacy/user_menu.html' %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\legacy\user_menu.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\base.html", line 23, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\legacy\user_menu.html", line 10, in block 'content'
+    <li><a href="{{ url_for('user_agreement') }}">User agreement</a></li>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'user_agreement'. Did you mean 'user_menu' instead?
+2025-11-25 22:49:02,265 INFO Successful login for andycheng
+2025-11-26 00:17:44,111 INFO Successful login for andycheng
+2025-11-26 00:42:49,250 INFO Successful login for admin
+2025-11-26 00:45:25,617 ERROR Template rendering failed in /auctions: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 316, in auctions
+    return render_template('auction_browse.html', items=sample_items)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\base.html", line 23, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 23, in block 'content'
+    <p>No auctions found. Try <a href="{{ url_for('auctions') }}">Browse</a> or visit the <a href="{{ url_for('help_page') }}">Help</a> page.</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+2025-11-26 00:48:42,022 ERROR Template rendering failed in /auctions: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 316, in auctions
+    return render_template('auction_browse.html', items=sample_items)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\base.html", line 23, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 23, in block 'content'
+    <p>No auctions found. Try <a href="{{ url_for('auctions') }}">Browse</a> or visit the <a href="{{ url_for('help_page') }}">Help</a> page.</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+2025-11-26 00:48:42,085 ERROR Template rendering failed in /auctions: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+Traceback (most recent call last):
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\app.py", line 316, in auctions
+    return render_template('auction_browse.html', items=sample_items)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\base.html", line 23, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\templates\auction_browse.html", line 23, in block 'content'
+    <p>No auctions found. Try <a href="{{ url_for('auctions') }}">Browse</a> or visit the <a href="{{ url_for('help_page') }}">Help</a> page.</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andy Cheng\OneDrive\Andy Final Project\src\iom\.env\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'help_page'. Did you mean 'auction_page' instead?
+2025-11-26 13:21:06,082 WARNING get_auctions failed in /: ('08001', '[08001] [Microsoft][ODBC Driver 18 for SQL Server]TCP 提供者: 逾時錯誤 [258].  (258) (SQLDriverConnect); [08001] [Microsoft][ODBC Driver 18 for SQL Server]登入逾時終止 (0); [08001] [Microsoft][ODBC Driver 18 for SQL Server]無效的連線字串屬性 (0); [08001] [Microsoft][ODBC Driver 18 for SQL Server]因為登入回應發生延遲，無法完成登入過程。 (258)')
+2025-11-26 13:21:43,260 INFO Successful login for andycheng

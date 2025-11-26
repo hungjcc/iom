@@ -103,6 +103,50 @@
                 {% endfor %}
               </tbody>
             </table>
+          
+          <h2>Auctions Housekeeping</h2>
+          <p>Perform maintenance actions on an auction by ID.</p>
+          <form id="housekeep-form" method="post" action="#" onsubmit="return prepareHousekeep(this)">
+            <label>Auction ID: <input type="number" name="a_id" id="hk-aid" required></label>
+            <label>Action:
+              <select name="action" id="hk-action">
+                <option value="close">Close (end now)</option>
+                <option value="reopen">Reopen (clear end date)</option>
+                <option value="set_end_date">Set End Date</option>
+                <option value="extend_days">Extend by Days</option>
+                <option value="cancel">Cancel Auction</option>
+                <option value="set_status">Set Status</option>
+              </select>
+            </label>
+            <label id="hk-enddate-label" style="display:none">End date (ISO): <input type="datetime-local" id="hk-enddate" name="end_date"></label>
+            <label id="hk-days-label" style="display:none">Days: <input type="number" id="hk-days" name="days" min="1"></label>
+            <label id="hk-status-label" style="display:none">Status: <input type="text" id="hk-status" name="status"></label>
+            <button type="submit">Apply</button>
+          </form>
+
+          <script>
+            const actionEl = document.getElementById('hk-action');
+            const endLabel = document.getElementById('hk-enddate-label');
+            const daysLabel = document.getElementById('hk-days-label');
+            const statusLabel = document.getElementById('hk-status-label');
+            function updateFields() {
+              const v = actionEl.value;
+              endLabel.style.display = (v === 'set_end_date') ? '' : 'none';
+              daysLabel.style.display = (v === 'extend_days') ? '' : 'none';
+              statusLabel.style.display = (v === 'set_status') ? '' : 'none';
+            }
+            actionEl.addEventListener('change', updateFields);
+            updateFields();
+            function prepareHousekeep(form) {
+              const aid = document.getElementById('hk-aid').value;
+              if (!aid) {
+                alert('Please enter an auction ID');
+                return false;
+              }
+              form.action = '/admin/auction/' + encodeURIComponent(aid) + '/housekeep';
+              return true;
+            }
+          </script>
           {% else %}
             <p>No member list available (DB not configured or empty).</p>
           {% endif %}

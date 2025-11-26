@@ -9,6 +9,53 @@ Prereqs
   ```
 - Ensure DB connectivity: place `credential.py` in the project root or set `ODBC_DSN` / `ODBC_CONN` (see `db.get_connection()` behavior in `db.py`).
 
+Configuring DB-backed mode (two options)
+
+Option A — Preferred: create a local `credential.py` (recommended for development)
+- Copy the example and edit with your values (do NOT commit):
+  ```powershell
+  copy .\credential.py.example .\credential.py
+  # then edit .\credential.py in your editor and fill server/database/username/password
+  ```
+
+Option B — Use environment variables (CI / ephemeral runs)
+- Using a DSN:
+  ```powershell
+  $env:ODBC_DSN='MyDsn'; $env:DB_USER='sa'; $env:DB_PASS='pw'
+  $env:USE_DB='1'
+  python app.py
+  ```
+- Or using a full connection string:
+  ```powershell
+  $env:ODBC_CONN="DRIVER={ODBC Driver 18 for SQL Server};SERVER=host;DATABASE=db;UID=user;PWD=pass"
+  $env:USE_DB='1'
+  python app.py
+  ```
+
+Quick DB connection test
+- Run this tool to verify connectivity (uses the same `db.get_connection()` logic):
+  ```powershell
+  python tools/test_conn.py
+  ```
+
+Delete items by title (safe script)
+- A small helper script `tools/delete_items_by_title.py` can delete rows in the `items` table where `i_title` matches a string. It supports a dry-run and requires `--confirm` to perform the delete.
+- Examples (PowerShell):
+  ```powershell
+  # dry-run: shows count but does not delete
+  python tools\delete_items_by_title.py --dry-run
+
+  # actually delete rows with the default title 'E2E test direct'
+  python tools\delete_items_by_title.py --confirm
+
+  # specify a different title to match
+  python tools\delete_items_by_title.py --confirm --title "My test title"
+  ```
+
+Notes
+- The script prefers the project's `db.get_connection()` helper. If that is not available it falls back to using `ODBC_CONN` or `ODBC_DSN` + `DB_USER`/`DB_PASS` from the environment.
+
+
 Run the app
 - Run Flask dev server (DB mode optional):
   ```powershell
