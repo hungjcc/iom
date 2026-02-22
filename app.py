@@ -29,6 +29,9 @@ if USE_DB:
 
 # --- Auth hardening: login attempt tracking and logging ---
 AUTH_LOG = os.getenv('AUTH_LOG', 'auth.log')
+if AUTH_LOG.startswith('/'):
+    log_dir = os.path.dirname(AUTH_LOG) or '/'
+    os.makedirs(log_dir, exist_ok=True)
 logger = logging.getLogger('auth')
 if not logger.handlers:
     h = logging.FileHandler(AUTH_LOG)
