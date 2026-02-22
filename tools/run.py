@@ -3,13 +3,13 @@
 tools/run.py - small wrapper to run common project tooling from one place.
 
 Usage examples:
-  python tools/run.py smoke
-  python tools/run.py create-item-auction
-  python tools/run.py reset-password
-  python tools/run.py grant 3
-  python tools/run.py revoke alice
-  python tools/run.py auto-bid --auction 3 --amount 5.00
-  python tools/run.py schema --tables auction item --output schema.json
+    .venv/bin/python tools/run.py smoke
+    .venv/bin/python tools/run.py create-item-auction
+    .venv/bin/python tools/run.py reset-password
+    .venv/bin/python tools/run.py grant 3
+    .venv/bin/python tools/run.py revoke alice
+    .venv/bin/python tools/run.py auto-bid --auction 3 --amount 5.00
+    .venv/bin/python tools/run.py schema --tables auction item --output schema.json
 """
 import argparse
 import subprocess
@@ -29,7 +29,7 @@ def run_cmd(cmd, env=None):
 
 
 def run_module(module, args=None, env=None):
-    """Run a tool as a module: python -m tools.<module> [args...]"""
+    """Run a tool as a module: .venv/bin/python -m tools.<module> [args...]"""
     cmd = [PY, '-m', f'tools.{module}']
     if args:
         cmd += list(args)

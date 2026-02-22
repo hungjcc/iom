@@ -5,3 +5,4 @@ iom.db
 __pycache__/
 *.pyc
 /static/uploads/*
+tools/legacy_sqlserver/

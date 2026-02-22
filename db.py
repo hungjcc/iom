@@ -1,9 +1,8 @@
 import os
 import sqlite3
-from pathlib import Path
 from datetime import datetime, timedelta
-from decimal import Decimal
-from typing import Iterable, List, Optional, Sequence
+from pathlib import Path
+from typing import Iterable, List, Optional, Sequence, Tuple
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -36,6 +35,7 @@ CREATE TABLE IF NOT EXISTS item (
     i_s_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     i_status TEXT NOT NULL DEFAULT 'A',
     i_image TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(i_m_id) REFERENCES member(m_id)
 );
 
@@ -48,6 +48,8 @@ CREATE TABLE IF NOT EXISTS auction (
     a_s_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     a_e_date TIMESTAMP,
     a_status TEXT NOT NULL DEFAULT 'open',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(a_item_id) REFERENCES item(i_id) ON DELETE CASCADE,
     FOREIGN KEY(a_m_id) REFERENCES member(m_id)
 );
@@ -90,12 +92,10 @@ _DEFAULT_CATEGORIES = [
 
 def _ensure_schema(conn: sqlite3.Connection) -> None:
     conn.executescript(_SCHEMA_SQL)
-    existing = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    if "category" in existing:
-        rows = conn.execute("SELECT COUNT(*) FROM category").fetchone()
-        if rows and rows[0] == 0:
-            conn.executemany("INSERT INTO category(name) VALUES (?)", [(c,) for c in _DEFAULT_CATEGORIES])
-            conn.commit()
+    count = conn.execute("SELECT COUNT(*) FROM category").fetchone()[0]
+    if count == 0:
+        conn.executemany("INSERT INTO category(name) VALUES (?)", [(c,) for c in _DEFAULT_CATEGORIES])
+        conn.commit()
 
 
 def get_connection() -> sqlite3.Connection:
@@ -108,7 +108,7 @@ def get_connection() -> sqlite3.Connection:
 
 
 def _row_to_dict(row: sqlite3.Row) -> dict:
-    return dict(row) if isinstance(row, sqlite3.Row) else dict(row or {})
+    return dict(row) if row else {}
 
 
 def _format_money(val) -> Optional[str]:
@@ -125,110 +125,110 @@ def url_for_static_placeholder() -> str:
     return "/static/placeholder.png"
 
 
+def _compute_duration(start, end) -> Optional[int]:
+    if not start or not end:
+        return None
+    try:
+        if isinstance(start, str):
+            start = datetime.fromisoformat(start)
+        if isinstance(end, str):
+            end = datetime.fromisoformat(end)
+        diff = end - start
+        return max(0, int(diff.total_seconds() // 86400))
+    except Exception:
+        return None
+
+
 def get_auctions(limit: int = 50) -> List[dict]:
     conn = get_connection()
     sql = """
-        SELECT a.id AS auction_id,
-               a.item_id,
-               COALESCE(a.current_price, a.starting_price) AS current_price,
-               a.status,
-               a.start_date,
-               a.end_date,
-               i.title,
-               i.description,
-               i.image_url,
-               i.owner_id AS seller_id
+        SELECT a.a_id,
+               a.a_item_id,
+               a.a_c_price,
+               a.a_s_price,
+               a.a_status,
+               a.a_s_date,
+               a.a_e_date,
+               i.i_title,
+               i.i_desc,
+               i.i_image,
+               i.i_m_id
         FROM auction a
-        JOIN item i ON i.id = a.item_id
-        ORDER BY a.start_date DESC
+        JOIN item i ON i.i_id = a.a_item_id
+        ORDER BY a.a_s_date DESC
         LIMIT ?
     """
     rows = conn.execute(sql, (limit,)).fetchall()
-    out = []
+    conn.close()
+    results = []
     for row in rows:
         data = _row_to_dict(row)
-        image = data.get("image_url") or url_for_static_placeholder()
-        out.append({
-            "id": data.get("auction_id"),
-            "item_id": data.get("item_id"),
-            "title": data.get("title"),
-            "description": data.get("description"),
+        price = data.get("a_c_price") or data.get("a_s_price")
+        image = data.get("i_image") or url_for_static_placeholder()
+        results.append({
+            "id": data.get("a_id"),
+            "item_id": data.get("a_item_id"),
+            "title": data.get("i_title"),
+            "description": data.get("i_desc"),
             "image_url": image,
-            "current_bid": _format_money(data.get("current_price")),
-            "seller_id": data.get("seller_id"),
-            "start_date": data.get("start_date"),
-            "end_time": data.get("end_date"),
-            "duration": _compute_duration(data.get("start_date"), data.get("end_date")),
-            "url": f"/auction/{data.get('auction_id')}",
-            "status": data.get("status", "open"),
+            "current_bid": _format_money(price),
+            "seller_id": data.get("i_m_id"),
+            "start_date": data.get("a_s_date"),
+            "end_time": data.get("a_e_date"),
+            "duration": _compute_duration(data.get("a_s_date"), data.get("a_e_date")),
+            "url": f"/auction/{data.get('a_id')}",
+            "status": data.get("a_status", "open"),
         })
-    conn.close()
-    return out
-
-
-def _compute_duration(start_date, end_date) -> Optional[int]:
-    try:
-        if start_date and end_date:
-            if isinstance(start_date, str):
-                start_date = datetime.fromisoformat(start_date)
-            if isinstance(end_date, str):
-                end_date = datetime.fromisoformat(end_date)
-            delta = end_date - start_date
-            return max(0, int(delta.total_seconds() // 86400))
-    except Exception:
-        return None
-    return None
+    return results
 
 
 def get_auction(auction_id: int) -> Optional[dict]:
     conn = get_connection()
     sql = """
-        SELECT a.*, i.title, i.description, i.image_url, i.owner_id AS seller_id
+        SELECT a.*, i.i_title, i.i_desc, i.i_image, i.i_m_id
         FROM auction a
-        JOIN item i ON i.id = a.item_id
-        WHERE a.id = ?
+        JOIN item i ON i.i_id = a.a_item_id
+        WHERE a.a_id = ?
     """
     row = conn.execute(sql, (auction_id,)).fetchone()
+    conn.close()
     if not row:
-        conn.close()
         return None
     data = _row_to_dict(row)
-    image = data.get("image_url") or url_for_static_placeholder()
-    result = {
-        "id": data.get("id"),
-        "item_id": data.get("item_id"),
-        "title": data.get("title"),
-        "description": data.get("description"),
+    price = data.get("a_c_price") or data.get("a_s_price")
+    image = data.get("i_image") or url_for_static_placeholder()
+    return {
+        "id": data.get("a_id"),
+        "item_id": data.get("a_item_id"),
+        "title": data.get("i_title"),
+        "description": data.get("i_desc"),
         "image_url": image,
-        "current_bid": _format_money(data.get("current_price") or data.get("starting_price")),
-        "seller_id": data.get("seller_id"),
-        "start_date": data.get("start_date"),
-        "end_time": data.get("end_date"),
-        "duration": _compute_duration(data.get("start_date"), data.get("end_date")),
-        "url": f"/auction/{data.get('id')}",
-        "status": data.get("status", "open"),
+        "current_bid": _format_money(price),
+        "seller_id": data.get("i_m_id"),
+        "start_date": data.get("a_s_date"),
+        "end_time": data.get("a_e_date"),
+        "duration": _compute_duration(data.get("a_s_date"), data.get("a_e_date")),
+        "url": f"/auction/{data.get('a_id')}",
+        "status": data.get("a_status", "open"),
     }
-    conn.close()
-    return result
 
 
 def get_user_by_username(username: str) -> Optional[dict]:
     conn = get_connection()
-    row = conn.execute("SELECT * FROM member WHERE username = ?", (username,)).fetchone()
+    row = conn.execute("SELECT * FROM member WHERE m_login_id = ?", (username,)).fetchone()
     conn.close()
     if not row:
         return None
     data = _row_to_dict(row)
     return {
-        "id": data.get("id"),
-        "username": data.get("username"),
-        "password": data.get("password"),
-        "email": data.get("email"),
-        "first_name": data.get("first_name"),
-        "last_name": data.get("last_name"),
-        "is_admin": bool(data.get("is_admin")),
-        "m_is_admin": bool(data.get("is_admin")),
-        "m_role": "admin" if data.get("is_admin") else "user",
+        "id": data.get("m_id"),
+        "username": data.get("m_login_id"),
+        "m_login_id": data.get("m_login_id"),
+        "password": data.get("m_pass"),
+        "email": data.get("m_email"),
+        "is_admin": bool(data.get("m_is_admin")),
+        "m_is_admin": bool(data.get("m_is_admin")),
+        "m_role": data.get("m_role") or ("admin" if data.get("m_is_admin") else "user"),
     }
 
 
@@ -243,17 +243,18 @@ def verify_password(stored_password, provided_password) -> bool:
     return str(stored_password) == str(provided_password)
 
 
-def create_member(login_id: str, plain_password: str, first_name: Optional[str] = None,
-                  last_name: Optional[str] = None, email: Optional[str] = None) -> int:
+def create_member(login_id: str, plain_password: str,
+                  email: Optional[str] = None,
+                  role: Optional[str] = None) -> int:
     conn = get_connection()
-    existing = conn.execute("SELECT 1 FROM member WHERE username = ?", (login_id,)).fetchone()
-    if existing:
+    exists = conn.execute("SELECT 1 FROM member WHERE m_login_id = ?", (login_id,)).fetchone()
+    if exists:
         conn.close()
         raise ValueError("login_id already exists")
-    hashed = generate_password_hash(plain_password)
+    hashed = generate_password_hash(plain_password, method='pbkdf2:sha256', salt_length=16)
     cur = conn.execute(
-        "INSERT INTO member(username, password, first_name, last_name, email) VALUES (?, ?, ?, ?, ?)",
-        (login_id, hashed, first_name, last_name, email)
+        "INSERT INTO member(m_login_id, m_pass, m_email, m_role) VALUES (?, ?, ?, ?)",
+        (login_id, hashed, email, role)
     )
     conn.commit()
     member_id = cur.lastrowid
@@ -263,7 +264,7 @@ def create_member(login_id: str, plain_password: str, first_name: Optional[str] 
 
 def confirm_member(m_id: int) -> bool:
     conn = get_connection()
-    cur = conn.execute("UPDATE member SET status = 'A' WHERE id = ?", (m_id,))
+    cur = conn.execute("UPDATE member SET m_status = 'A' WHERE m_id = ?", (m_id,))
     conn.commit()
     conn.close()
     return cur.rowcount > 0
@@ -271,29 +272,24 @@ def confirm_member(m_id: int) -> bool:
 
 def get_member_by_id(m_id: int) -> Optional[dict]:
     conn = get_connection()
-    row = conn.execute("SELECT * FROM member WHERE id = ?", (m_id,)).fetchone()
+    row = conn.execute("SELECT * FROM member WHERE m_id = ?", (m_id,)).fetchone()
     conn.close()
-    if not row:
-        return None
-    data = _row_to_dict(row)
-    data["username"] = data.get("username")
-    data["password"] = data.get("password")
-    return data
+    return _row_to_dict(row) if row else None
 
 
 def get_all_members() -> List[dict]:
     conn = get_connection()
-    rows = conn.execute("SELECT id, username, email, status, is_admin FROM member ORDER BY id ASC").fetchall()
+    rows = conn.execute("SELECT m_id, m_login_id, m_email, m_status, m_is_admin, m_role FROM member ORDER BY m_id").fetchall()
     conn.close()
     return [
         {
-            "id": row["id"],
-            "username": row["username"],
-            "email": row["email"],
-            "status": row["status"],
-            "m_is_admin": bool(row["is_admin"]),
-            "is_admin": bool(row["is_admin"]),
-            "m_role": "admin" if row["is_admin"] else "user",
+            "id": row["m_id"],
+            "username": row["m_login_id"],
+            "email": row["m_email"],
+            "status": row["m_status"],
+            "m_is_admin": bool(row["m_is_admin"]),
+            "is_admin": bool(row["m_is_admin"]),
+            "m_role": row["m_role"] or ("admin" if row["m_is_admin"] else "user"),
         }
         for row in rows
     ]
@@ -301,8 +297,10 @@ def get_all_members() -> List[dict]:
 
 def set_member_admin(m_id: int, is_admin: bool = True) -> bool:
     conn = get_connection()
-    cur = conn.execute("UPDATE member SET is_admin = ?, status = COALESCE(status, 'A') WHERE id = ?",
-                       (1 if is_admin else 0, m_id))
+    cur = conn.execute(
+        "UPDATE member SET m_is_admin = ?, m_role = COALESCE(m_role, ?) WHERE m_id = ?",
+        (1 if is_admin else 0, 'admin' if is_admin else 'user', m_id)
+    )
     conn.commit()
     conn.close()
     return cur.rowcount > 0
@@ -312,49 +310,46 @@ def delete_auction_and_bids(auction_id: int) -> tuple[int, int]:
     conn = get_connection()
     cur = conn.cursor()
     try:
-        cur.execute("DELETE FROM bid WHERE auction_id = ?", (auction_id,))
+        cur.execute("DELETE FROM bid WHERE b_a_id = ?", (auction_id,))
         deleted_bids = cur.rowcount or 0
-        cur.execute("DELETE FROM auction WHERE id = ?", (auction_id,))
+        cur.execute("DELETE FROM auction WHERE a_id = ?", (auction_id,))
         deleted_auctions = cur.rowcount or 0
         conn.commit()
+        return deleted_auctions, deleted_bids
     finally:
         conn.close()
-    return deleted_auctions, deleted_bids
 
 
 def place_bid(auction_id: int, bidder_m_id: int, amount) -> bool:
     try:
-        bid_val = float(amount)
+        bid_amount = float(amount)
     except Exception:
         return False
     conn = get_connection()
     try:
-        auction = conn.execute("SELECT status, end_date, COALESCE(current_price, starting_price) AS current_price FROM auction WHERE id = ?",
-                               (auction_id,)).fetchone()
-        if not auction:
+        row = conn.execute(
+            "SELECT a_status, a_e_date, COALESCE(a_c_price, a_s_price) AS current_price FROM auction WHERE a_id = ?",
+            (auction_id,)
+        ).fetchone()
+        if not row:
             return False
-        status = auction["status"]
-        end_date = auction["end_date"]
-        if status and status.lower() in ("closed", "cancelled"):
+        if row["a_status"] and row["a_status"].lower() in ("closed", "cancelled"):
             return False
+        end_date = row["a_e_date"]
         if end_date:
             try:
-                if isinstance(end_date, str):
-                    end_dt = datetime.fromisoformat(end_date)
-                else:
-                    end_dt = end_date
+                end_dt = datetime.fromisoformat(end_date) if isinstance(end_date, str) else end_date
                 if end_dt <= datetime.utcnow():
                     return False
             except Exception:
                 pass
-        current = float(auction["current_price"] or 0)
-        if bid_val <= max(current, 0):
+        current_price = float(row["current_price"] or 0)
+        if bid_amount <= current_price:
             return False
-        conn.execute("INSERT INTO bid(auction_id, bidder_id, amount) VALUES (?, ?, ?)",
-                     (auction_id, bidder_m_id, bid_val))
+        conn.execute("INSERT INTO bid(b_a_id, b_m_id, b_amount) VALUES (?, ?, ?)", (auction_id, bidder_m_id, bid_amount))
         conn.execute(
-            "UPDATE auction SET current_price = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-            (bid_val, auction_id)
+            "UPDATE auction SET a_c_price = ?, updated_at = CURRENT_TIMESTAMP WHERE a_id = ?",
+            (bid_amount, auction_id)
         )
         conn.commit()
         return True
@@ -363,12 +358,12 @@ def place_bid(auction_id: int, bidder_m_id: int, amount) -> bool:
 
 
 def create_item(title: str, description: Optional[str] = None, owner_id: Optional[int] = None,
-                category: Optional[str] = None, sub_category: Optional[str] = None,
+                starting_price: float = 0.0, duration: int = 7, status: str = 'A',
                 image_path: Optional[str] = None) -> int:
     conn = get_connection()
     cur = conn.execute(
-        "INSERT INTO item(title, description, owner_id, category, sub_category, image_url) VALUES (?, ?, ?, ?, ?, ?)",
-        (title, description, owner_id, category, sub_category, image_path)
+        "INSERT INTO item(i_m_id, i_title, i_desc, i_b_price, i_duration, i_status, i_image) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (owner_id, title, description, starting_price, duration, status, image_path)
     )
     conn.commit()
     item_id = cur.lastrowid
@@ -380,7 +375,7 @@ def create_auction(item_id: int, seller_id: Optional[int] = None, starting_price
                    start_date: Optional[datetime] = None, end_date: Optional[datetime] = None) -> int:
     conn = get_connection()
     cur = conn.execute(
-        "INSERT INTO auction(item_id, seller_id, starting_price, current_price, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO auction(a_item_id, a_m_id, a_s_price, a_c_price, a_s_date, a_e_date) VALUES (?, ?, ?, ?, ?, ?)",
         (item_id, seller_id, starting_price, starting_price, start_date or datetime.utcnow(), end_date)
     )
     conn.commit()
@@ -391,18 +386,17 @@ def create_auction(item_id: int, seller_id: Optional[int] = None, starting_price
 
 def create_item_and_auction(title: str, description: Optional[str], seller_id: Optional[int] = None,
                              starting_price: float = 0.0, end_date: Optional[datetime] = None,
-                             category: Optional[str] = None, sub_category: Optional[str] = None,
-                             image_path: Optional[str] = None):
+                             duration: int = 7, status: str = 'P') -> Tuple[int, int]:
     conn = get_connection()
     try:
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO item(title, description, owner_id, category, sub_category, image_url) VALUES (?, ?, ?, ?, ?, ?)",
-            (title, description, seller_id, category, sub_category, image_path)
+            "INSERT INTO item(i_m_id, i_title, i_desc, i_b_price, i_duration, i_status) VALUES (?, ?, ?, ?, ?, ?)",
+            (seller_id, title, description, starting_price, duration, status)
         )
         item_id = cur.lastrowid
         cur.execute(
-            "INSERT INTO auction(item_id, seller_id, starting_price, current_price, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO auction(a_item_id, a_m_id, a_s_price, a_c_price, a_s_date, a_e_date) VALUES (?, ?, ?, ?, ?, ?)",
             (item_id, seller_id, starting_price, starting_price, datetime.utcnow(), end_date)
         )
         auction_id = cur.lastrowid
@@ -414,14 +408,14 @@ def create_item_and_auction(title: str, description: Optional[str], seller_id: O
 
 def get_categories() -> List[tuple]:
     conn = get_connection()
-    rows = conn.execute("SELECT id, name FROM category ORDER BY name ASC").fetchall()
+    rows = conn.execute("SELECT cat_id, name FROM category ORDER BY name").fetchall()
     conn.close()
-    return [(str(row["id"]), row["name"]) for row in rows]
+    return [(str(row["cat_id"]), row["name"]) for row in rows]
 
 
 def set_item_image(item_id: int, image_path: str) -> bool:
     conn = get_connection()
-    cur = conn.execute("UPDATE item SET image_url = ? WHERE id = ?", (image_path, item_id))
+    cur = conn.execute("UPDATE item SET i_image = ? WHERE i_id = ?", (image_path, item_id))
     conn.commit()
     conn.close()
     return cur.rowcount > 0
@@ -442,49 +436,47 @@ def add_item_image(item_id: int, image_url: str, thumb_url: Optional[str] = None
 def get_item_images(item_id: int) -> List[dict]:
     conn = get_connection()
     rows = conn.execute(
-        "SELECT id, image_url, thumb_url, sort_order FROM item_image WHERE item_id = ? ORDER BY sort_order ASC, id ASC",
+        "SELECT img_id, image_url, thumb_url, sort_order FROM item_image WHERE item_id = ? ORDER BY sort_order, img_id",
         (item_id,)
     ).fetchall()
     conn.close()
-    out = []
+    uploads_dir = BASE_DIR / "static" / "uploads"
+    results = []
     for row in rows:
+        variants = {}
         image_url = row["image_url"]
         thumb_url = row["thumb_url"]
-        variants = {}
         try:
             if image_url and image_url.startswith("/static/uploads/"):
-                uploads_dir = BASE_DIR / "static" / "uploads"
                 fname = os.path.basename(image_url)
-                name_noext, ext = os.path.splitext(fname)
-                webp = uploads_dir / f"{name_noext}.webp"
+                stem, ext = os.path.splitext(fname)
+                webp = uploads_dir / f"{stem}.webp"
                 if webp.exists():
-                    variants["webp"] = f"/static/uploads/{name_noext}.webp"
+                    variants["webp"] = f"/static/uploads/{stem}.webp"
                 for size in ("small", "medium", "large"):
-                    thumb_name = uploads_dir / f"{name_noext}_thumb_{size}{ext}"
-                    if thumb_name.exists():
-                        variants[f"thumb_{size}"] = f"/static/uploads/{name_noext}_thumb_{size}{ext}"
+                    candidate = uploads_dir / f"{stem}_thumb_{size}{ext}"
+                    if candidate.exists():
+                        variants[f"thumb_{size}"] = f"/static/uploads/{stem}_thumb_{size}{ext}"
         except Exception:
             variants = {}
-        out.append({
-            "img_id": row["id"],
+        results.append({
+            "img_id": row["img_id"],
             "image_url": image_url,
             "thumb_url": thumb_url,
             "sort_order": row["sort_order"],
             "variants": variants,
         })
-    return out
+    return results
 
 
 def delete_item_image(img_id: int) -> bool:
     conn = get_connection()
-    row = conn.execute("SELECT image_url, thumb_url FROM item_image WHERE id = ?", (img_id,)).fetchone()
+    row = conn.execute("SELECT image_url, thumb_url FROM item_image WHERE img_id = ?", (img_id,)).fetchone()
     if not row:
         conn.close()
         return False
-    image_url = row["image_url"]
-    thumb_url = row["thumb_url"]
-    _delete_image_files([image_url, thumb_url])
-    cur = conn.execute("DELETE FROM item_image WHERE id = ?", (img_id,))
+    _delete_image_files([row["image_url"], row["thumb_url"]])
+    cur = conn.execute("DELETE FROM item_image WHERE img_id = ?", (img_id,))
     conn.commit()
     conn.close()
     return cur.rowcount > 0
@@ -509,7 +501,7 @@ def reorder_item_images(item_id: int, ordered_img_ids: Iterable[int]) -> bool:
     conn = get_connection()
     try:
         for idx, img_id in enumerate(ordered_img_ids, start=1):
-            conn.execute("UPDATE item_image SET sort_order = ? WHERE id = ? AND item_id = ?",
+            conn.execute("UPDATE item_image SET sort_order = ? WHERE img_id = ? AND item_id = ?",
                          (idx, img_id, item_id))
         conn.commit()
         return True
@@ -524,36 +516,35 @@ def update_auction_housekeeping(a_id: int, action: str, params: Optional[dict] =
     now = datetime.utcnow()
     try:
         if action == "close":
-            cur.execute("UPDATE auction SET status = 'closed', end_date = COALESCE(end_date, ?), updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            cur.execute("UPDATE auction SET a_status = 'closed', a_e_date = COALESCE(a_e_date, ?), updated_at = CURRENT_TIMESTAMP WHERE a_id = ?",
                         (now, a_id))
         elif action == "reopen":
-            cur.execute("UPDATE auction SET status = 'open', end_date = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            cur.execute("UPDATE auction SET a_status = 'open', a_e_date = NULL, updated_at = CURRENT_TIMESTAMP WHERE a_id = ?",
                         (a_id,))
         elif action == "set_end_date":
             end_date = params.get("end_date")
             if isinstance(end_date, str):
                 end_date = datetime.fromisoformat(end_date)
-            cur.execute("UPDATE auction SET end_date = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            cur.execute("UPDATE auction SET a_e_date = ?, updated_at = CURRENT_TIMESTAMP WHERE a_id = ?",
                         (end_date, a_id))
         elif action == "extend_days":
             days = int(params.get("days", 0))
-            row = cur.execute("SELECT end_date FROM auction WHERE id = ?", (a_id,)).fetchone()
+            row = cur.execute("SELECT a_e_date FROM auction WHERE a_id = ?", (a_id,)).fetchone()
             if not row:
-                conn.close()
                 return False
-            end_date = row["end_date"]
+            end_date = row["a_e_date"]
             if isinstance(end_date, str):
                 end_date = datetime.fromisoformat(end_date)
             base = end_date or now
             new_end = base + timedelta(days=days)
-            cur.execute("UPDATE auction SET end_date = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            cur.execute("UPDATE auction SET a_e_date = ?, updated_at = CURRENT_TIMESTAMP WHERE a_id = ?",
                         (new_end, a_id))
         elif action == "cancel":
-            cur.execute("UPDATE auction SET status = 'cancelled', end_date = COALESCE(end_date, ?), updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            cur.execute("UPDATE auction SET a_status = 'cancelled', a_e_date = COALESCE(a_e_date, ?), updated_at = CURRENT_TIMESTAMP WHERE a_id = ?",
                         (now, a_id))
         elif action == "set_status":
             status = params.get("status") or "open"
-            cur.execute("UPDATE auction SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            cur.execute("UPDATE auction SET a_status = ?, updated_at = CURRENT_TIMESTAMP WHERE a_id = ?",
                         (status, a_id))
         conn.commit()
         return cur.rowcount and cur.rowcount > 0

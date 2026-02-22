@@ -1,7 +1,7 @@
 """
 Insert a short auction with end_date = now + 23 hours for duration rounding verification.
 Run this script from project root inside the venv:
-  & ".\.env\Scripts\Activate.ps1"; python tools\insert_short_auction.py
+    .venv/bin/python tools/insert_short_auction.py
 """
 import sys, os
 from datetime import datetime, timedelta

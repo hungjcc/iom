@@ -1,9 +1,9 @@
 """
 Confirm a member (set m_status = 'A') using db.confirm_member(m_id).
 Usage:
-  python tools/confirm_member.py <m_id>
+    .venv/bin/python tools/confirm_member.py <m_id>
 Example:
-  $env:DB_DRIVER='{ODBC Driver 18 for SQL Server}'; python tools/confirm_member.py 5
+    .venv/bin/python tools/confirm_member.py 5
 """
 import sys, os, traceback
 # Ensure project root is importable when running from tools/
@@ -17,7 +17,7 @@ except Exception:
     sys.exit(1)
 
 if len(sys.argv) < 2:
-    print('Usage: python tools/confirm_member.py <m_id>')
+    print('Usage: .venv/bin/python tools/confirm_member.py <m_id>')
     sys.exit(1)
 
 try:

@@ -23,7 +23,7 @@ def print_member(m):
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print('Usage: python tools/grant_revoke_admin.py <grant|revoke> <member_id|username>')
+        print('Usage: .venv/bin/python tools/grant_revoke_admin.py <grant|revoke> <member_id|username>')
         sys.exit(1)
     action = sys.argv[1].lower()
     target = sys.argv[2]

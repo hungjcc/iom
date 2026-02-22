@@ -1,16 +1,21 @@
-from db import get_connection
-import datetime
+#!/usr/bin/env python3
+"""Create a simple item+auction record for testing."""
 
-conn = get_connection()
-cur = conn.cursor()
-cur.execute("""
-INSERT INTO auction (title, description, current_price, status, created_at)
-VALUES (?, ?, ?, ?, ?)
-""", ("TEST AUCTION", "Manual test", 1.00, 'O', datetime.datetime.utcnow()))
-conn.commit()
-try:
-    print("Created auction id (driver-specific):", cur.lastrowid)
-except:
-    print("Inserted test auction; query to find it by title.")
-cur.close()
-conn.close()
+from __future__ import annotations
+
+from datetime import datetime, timedelta
+
+from db import create_item_and_auction
+
+
+if __name__ == "__main__":
+    auction_id, item_id = create_item_and_auction(
+        title="TEST AUCTION",
+        description="Manual test",
+        seller_id=None,
+        starting_price=1.0,
+        end_date=datetime.utcnow() + timedelta(days=7),
+        duration=7,
+        status='A'
+    )
+    print(f"Created item {item_id} with auction {auction_id}")
