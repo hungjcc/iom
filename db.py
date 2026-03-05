@@ -357,6 +357,37 @@ def place_bid(auction_id: int, bidder_m_id: int, amount) -> bool:
         conn.close()
 
 
+def get_current_highest_bidder(auction_id: int) -> Optional[dict]:
+    conn = get_connection()
+    try:
+        row = conn.execute(
+            """
+            SELECT b.b_m_id,
+                   b.b_amount,
+                   b.b_time,
+                   m.m_login_id,
+                   m.m_email
+            FROM bid b
+            JOIN member m ON m.m_id = b.b_m_id
+            WHERE b.b_a_id = ?
+            ORDER BY b.b_amount DESC, b.b_time DESC, b.b_id DESC
+            LIMIT 1
+            """,
+            (auction_id,)
+        ).fetchone()
+        if not row:
+            return None
+        return {
+            "member_id": row["b_m_id"],
+            "amount": float(row["b_amount"] or 0),
+            "time": row["b_time"],
+            "username": row["m_login_id"],
+            "email": row["m_email"],
+        }
+    finally:
+        conn.close()
+
+
 def create_item(title: str, description: Optional[str] = None, owner_id: Optional[int] = None,
                 starting_price: float = 0.0, duration: int = 7, status: str = 'A',
                 image_path: Optional[str] = None) -> int:

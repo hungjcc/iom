@@ -143,6 +143,10 @@ def send_confirmation_email(to_email, token):
         text = f"Please confirm your registration by clicking: {confirm_url}\n\nIf you didn't request this, ignore."
         html = None
 
+    return _send_email(to_email=to_email, subject=subject, text=text, html=html)
+
+
+def _send_email(to_email, subject, text, html=None):
     smtp_host = os.getenv('SMTP_HOST')
     smtp_port = int(os.getenv('SMTP_PORT', '0')) if os.getenv('SMTP_PORT') else None
     smtp_user = os.getenv('SMTP_USER')
@@ -154,7 +158,6 @@ def send_confirmation_email(to_email, token):
             msg['Subject'] = subject
             msg['From'] = smtp_user or 'noreply@example.com'
             msg['To'] = to_email
-            # Attach text and HTML alternative when available
             msg.set_content(text)
             if html:
                 msg.add_alternative(html, subtype='html')
@@ -163,15 +166,52 @@ def send_confirmation_email(to_email, token):
                     s.starttls()
                     s.login(smtp_user, smtp_pass)
                 s.send_message(msg)
-            logger.info(f"Sent confirmation email to {to_email}")
+            logger.info(f"Sent email to {to_email}: {subject}")
             return True
         except Exception as e:
             logger.exception(f"Failed sending email to {to_email}: {e}")
             return False
-    else:
-        # fallback: log to auth log and print (include rendered text)
-        logger.info(f"Confirmation email (no SMTP configured) to {to_email}: {text}")
-        return True
+
+    logger.info(f"Email (no SMTP configured) to {to_email}: {subject} | {text}")
+    return True
+
+
+def send_outbid_email(to_email, auction, previous_amount, new_amount):
+    if not to_email:
+        return False
+    subject = 'You have been outbid'
+    auction_title = (auction or {}).get('title') or f"Auction #{(auction or {}).get('id') or ''}".strip()
+    auction_url = None
+    try:
+        auction_url = url_for('view_auction', item_id=(auction or {}).get('id'), _external=True)
+    except Exception:
+        auction_url = (auction or {}).get('url')
+    symbol = os.getenv('CURRENCY_SYMBOL', 'HK$')
+
+    context = {
+        'auction_title': auction_title,
+        'auction_url': auction_url,
+        'previous_amount': f"{symbol}{float(previous_amount):.2f}",
+        'new_amount': f"{symbol}{float(new_amount):.2f}",
+    }
+
+    try:
+        text = render_template('email/outbid_email.txt', **context)
+    except Exception:
+        link_part = f"\nView auction: {auction_url}" if auction_url else ""
+        text = (
+            f"You've been outbid on {auction_title}.\n"
+            f"Your last bid: {context['previous_amount']}\n"
+            f"New highest bid: {context['new_amount']}"
+            f"{link_part}"
+        )
+
+    try:
+        html = render_template('email/outbid_email.html', **context)
+    except Exception:
+        html = None
+
+    return _send_email(to_email=to_email, subject=subject, text=text, html=html)
 
 
 def actual_date():
@@ -866,7 +906,7 @@ def place_bid_route(auction_id):
     if USE_DB:
         try:
             # Check auction existence and status first for clearer messages
-            from db import get_auction, get_connection, place_bid
+            from db import get_auction, get_connection, place_bid, get_current_highest_bidder
             auc = None
             try:
                 auc = get_auction(auction_id)
@@ -951,9 +991,29 @@ def place_bid_route(auction_id):
                 flash(f'Your bid must be higher than the current highest bid ({symbol}{current:.2f}).', 'error')
                 return redirect(url_for('view_auction', item_id=auction_id))
 
+            previous_highest = None
+            try:
+                previous_highest = get_current_highest_bidder(auction_id)
+            except Exception:
+                previous_highest = None
+
             # Attempt to place the bid
             ok = place_bid(auction_id, bidder_id, bid_val)
             if ok:
+                try:
+                    prev_id = int(previous_highest.get('member_id')) if previous_highest and previous_highest.get('member_id') is not None else None
+                except Exception:
+                    prev_id = None
+                if prev_id and prev_id != int(bidder_id):
+                    prev_email = previous_highest.get('email')
+                    prev_amount = previous_highest.get('amount')
+                    if prev_email:
+                        send_outbid_email(
+                            to_email=prev_email,
+                            auction=auc,
+                            previous_amount=prev_amount,
+                            new_amount=bid_val,
+                        )
                 flash('Your bid was placed successfully.', 'success')
             else:
                 flash('Your bid was not accepted (it may be too low or the auction is closed).', 'error')
