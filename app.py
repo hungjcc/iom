@@ -12,6 +12,14 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 app.secret_key = "replace-with-a-secure-secret"
 
+get_auctions = None
+get_auction = None
+get_user_by_username = None
+verify_password = None
+create_member = None
+get_member_by_id = None
+get_all_members = None
+
 # Optional DB-backed mode. Set USE_DB=1 or USE_DB=true to enable.
 USE_DB = os.getenv('USE_DB', '').lower() in ('1', 'true', 'yes')
 if USE_DB:
