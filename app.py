@@ -357,7 +357,9 @@ def register():
                 first_name = request.form.get('first_name') or request.form.get('fname')
                 last_name = request.form.get('last_name') or request.form.get('lname')
                 email = request.form.get('email')
-                new_id = create_member(username, password, first_name, last_name, email)
+                if first_name or last_name:
+                    logger.info(f"New member extra fields captured: first={first_name}, last={last_name}")
+                new_id = create_member(username, password, email=email, role=request.form.get('role') or 'user')
                 if email:
                     token = generate_confirmation_token(new_id)
                     send_confirmation_email(email, token)
@@ -440,6 +442,22 @@ def user_menu():
         return "User menu unavailable", 200
     except Exception as e:
         logger.exception("Unexpected error in /user_menu")
+        if app.debug:
+            return f"Error: {e}", 500
+        return "Internal server error", 500
+
+
+@app.route('/user_agreement')
+def user_agreement():
+    if not session.get('u_name'):
+        return redirect(url_for('user_login'))
+    try:
+        return render_template('user_agreement.html')
+    except FileNotFoundError:
+        logger.warning("user_agreement.html template not found")
+        return "User agreement page unavailable", 200
+    except Exception as e:
+        logger.exception("Unexpected error in /user_agreement")
         if app.debug:
             return f"Error: {e}", 500
         return "Internal server error", 500
@@ -1135,4 +1153,6 @@ def new_auction():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    host = os.getenv('HOST', '127.0.0.1')
+    port = int(os.getenv('PORT', '5000'))
+    app.run(host=host, port=port, debug=True)

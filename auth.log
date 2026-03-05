@@ -1117,3 +1117,76 @@ werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'help_p
 2026-02-22 11:30:25,562 INFO Successful login for admin
 2026-02-22 16:00:29,561 INFO Successful login for admin
 2026-02-22 16:21:05,734 INFO Successful login for admin
+2026-02-22 16:56:23,727 ERROR Unexpected error in /user_menu
+Traceback (most recent call last):
+  File "/Users/mayfair-mac/project/iom-website/iom/app.py", line 437, in user_menu
+    return render_template('user_menu.html', username=session.get('u_name'))
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/mayfair-mac/project/iom-website/iom/templates/user_menu.html", line 2, in top-level template code
+    {% include 'legacy/user_menu.html' %}
+  File "/Users/mayfair-mac/project/iom-website/iom/templates/legacy/user_menu.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "/Users/mayfair-mac/project/iom-website/iom/templates/base.html", line 23, in top-level template code
+    {% block content %}{% endblock %}
+  File "/Users/mayfair-mac/project/iom-website/iom/templates/legacy/user_menu.html", line 10, in block 'content'
+    <li><a href="{{ url_for('user_agreement') }}">User agreement</a></li>
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/werkzeug/routing/map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'user_agreement'. Did you mean 'user_menu' instead?
+2026-02-22 16:57:38,177 ERROR Unexpected error in /user_menu
+Traceback (most recent call last):
+  File "/Users/mayfair-mac/project/iom-website/iom/app.py", line 437, in user_menu
+    return render_template('user_menu.html', username=session.get('u_name'))
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/mayfair-mac/project/iom-website/iom/templates/user_menu.html", line 2, in top-level template code
+    {% include 'legacy/user_menu.html' %}
+  File "/Users/mayfair-mac/project/iom-website/iom/templates/legacy/user_menu.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "/Users/mayfair-mac/project/iom-website/iom/templates/base.html", line 23, in top-level template code
+    {% block content %}{% endblock %}
+  File "/Users/mayfair-mac/project/iom-website/iom/templates/legacy/user_menu.html", line 10, in block 'content'
+    <li><a href="{{ url_for('user_agreement') }}">User agreement</a></li>
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "/Users/mayfair-mac/project/iom-website/iom/.venv/lib/python3.9/site-packages/werkzeug/routing/map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'user_agreement'. Did you mean 'user_menu' instead?
+2026-02-22 17:09:55,036 ERROR Registration failed for andy: create_member() takes from 2 to 4 positional arguments but 5 were given
+Traceback (most recent call last):
+  File "/Users/mayfair-mac/project/iom-website/iom/app.py", line 360, in register
+    new_id = create_member(username, password, first_name, last_name, email)
+TypeError: create_member() takes from 2 to 4 positional arguments but 5 were given
+2026-02-22 17:10:12,778 ERROR Registration failed for john: create_member() takes from 2 to 4 positional arguments but 5 were given
+Traceback (most recent call last):
+  File "/Users/mayfair-mac/project/iom-website/iom/app.py", line 360, in register
+    new_id = create_member(username, password, first_name, last_name, email)
+TypeError: create_member() takes from 2 to 4 positional arguments but 5 were given
+2026-02-22 17:14:38,361 INFO Successful login for admin
+2026-02-22 17:17:13,723 ERROR Registration failed for jennifer: create_member() takes from 2 to 4 positional arguments but 5 were given
+Traceback (most recent call last):
+  File "/Users/mayfair-mac/project/iom-website/iom/app.py", line 360, in register
+    new_id = create_member(username, password, first_name, last_name, email)
+TypeError: create_member() takes from 2 to 4 positional arguments but 5 were given
+2026-02-22 17:20:26,385 INFO Failed login 1 for jennifer
+2026-02-22 17:20:29,635 INFO Successful login for jennifer
+2026-02-22 17:21:02,207 INFO Successful login for admin
