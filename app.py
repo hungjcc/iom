@@ -143,6 +143,10 @@ def send_confirmation_email(to_email, token):
         text = f"Please confirm your registration by clicking: {confirm_url}\n\nIf you didn't request this, ignore."
         html = None
 
+    return _send_email(to_email=to_email, subject=subject, text=text, html=html)
+
+
+def _send_email(to_email, subject, text, html=None):
     smtp_host = os.getenv('SMTP_HOST')
     smtp_port = int(os.getenv('SMTP_PORT', '0')) if os.getenv('SMTP_PORT') else None
     smtp_user = os.getenv('SMTP_USER')
@@ -154,7 +158,6 @@ def send_confirmation_email(to_email, token):
             msg['Subject'] = subject
             msg['From'] = smtp_user or 'noreply@example.com'
             msg['To'] = to_email
-            # Attach text and HTML alternative when available
             msg.set_content(text)
             if html:
                 msg.add_alternative(html, subtype='html')
@@ -163,15 +166,65 @@ def send_confirmation_email(to_email, token):
                     s.starttls()
                     s.login(smtp_user, smtp_pass)
                 s.send_message(msg)
-            logger.info(f"Sent confirmation email to {to_email}")
+            logger.info(f"Sent email to {to_email}: {subject}")
             return True
         except Exception as e:
             logger.exception(f"Failed sending email to {to_email}: {e}")
             return False
-    else:
-        # fallback: log to auth log and print (include rendered text)
-        logger.info(f"Confirmation email (no SMTP configured) to {to_email}: {text}")
-        return True
+
+    logger.info(f"Email (no SMTP configured) to {to_email}: {subject} | {text}")
+    return True
+
+
+def send_auction_result_email(to_email, auction_title, auction_url, recipient_role, winning_amount=None):
+    if not to_email:
+        return False
+
+    symbol = os.getenv('CURRENCY_SYMBOL', 'HK$')
+    amount_text = None
+    if winning_amount is not None:
+        try:
+            amount_text = f"{symbol}{float(winning_amount):.2f}"
+        except Exception:
+            amount_text = str(winning_amount)
+
+    subject_map = {
+        'winner': 'You won the auction',
+        'seller_winner': 'Your auction has a winner',
+        'seller_no_sale': 'Your auction ended with no bids',
+    }
+    subject = subject_map.get(recipient_role, 'Auction result update')
+
+    context = {
+        'auction_title': auction_title,
+        'auction_url': auction_url,
+        'amount_text': amount_text,
+    }
+
+    template_map = {
+        'winner': ('email/auction_result_winner.txt', 'email/auction_result_winner.html'),
+        'seller_winner': ('email/auction_result_seller_winner.txt', 'email/auction_result_seller_winner.html'),
+        'seller_no_sale': ('email/auction_result_seller_no_sale.txt', 'email/auction_result_seller_no_sale.html'),
+    }
+    text_tmpl, html_tmpl = template_map.get(recipient_role, template_map['seller_no_sale'])
+
+    try:
+        text = render_template(text_tmpl, **context)
+    except Exception:
+        link_text = f"\nView auction: {auction_url}" if auction_url else ""
+        if recipient_role == 'winner':
+            text = f"You won {auction_title}. Winning bid: {amount_text}.{link_text}"
+        elif recipient_role == 'seller_winner':
+            text = f"Your auction {auction_title} ended with a winning bid of {amount_text}.{link_text}"
+        else:
+            text = f"Your auction {auction_title} ended with no bids.{link_text}"
+
+    try:
+        html = render_template(html_tmpl, **context)
+    except Exception:
+        html = None
+
+    return _send_email(to_email=to_email, subject=subject, text=text, html=html)
 
 
 def actual_date():
