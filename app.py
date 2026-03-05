@@ -46,16 +46,34 @@ if not logger.handlers:
     logger.setLevel(logging.INFO)
 
 LOGIN_ATTEMPTS = {}  # username -> {'fail_count': int, 'lockout_until': timestamp}
-MAX_FAILED = 5
-LOCKOUT_SECONDS = 300
+MAX_FAILED = int(os.getenv('LOGIN_MAX_FAILED', '5'))
+LOCKOUT_SECONDS = int(os.getenv('LOGIN_LOCKOUT_SECONDS', '300'))
 
-def is_locked(username):
-    info = LOGIN_ATTEMPTS.get(username)
-    if not info:
-        return False
-    until = info.get('lockout_until')
-    if until and time.time() < until:
-        return True
+
+def _client_ip():
+    xff = request.headers.get('X-Forwarded-For', '')
+    if xff:
+        return xff.split(',')[0].strip() or 'unknown'
+    return request.remote_addr or 'unknown'
+
+
+def _attempt_keys(username, ip_addr=None):
+    uname = (username or '').strip().lower()
+    ip = (ip_addr or 'unknown').strip().lower()
+    keys = [f'ip:{ip}']
+    if uname:
+        keys.append(f'user:{uname}')
+    return keys
+
+
+def is_locked(username, ip_addr=None):
+    for key in _attempt_keys(username, ip_addr):
+        info = LOGIN_ATTEMPTS.get(key)
+        if not info:
+            continue
+        until = info.get('lockout_until')
+        if until and time.time() < until:
+            return True
     return False
 
 
@@ -102,19 +120,23 @@ def user_is_admin(user_dict):
     # No username fallback — require DB role fields for admin privileges
     return False
 
-def record_failed(username):
-    info = LOGIN_ATTEMPTS.setdefault(username, {'fail_count': 0, 'lockout_until': None})
-    info['fail_count'] += 1
-    if info['fail_count'] >= MAX_FAILED:
-        info['lockout_until'] = time.time() + LOCKOUT_SECONDS
-        logger.warning(f"Account locked: {username}")
-    else:
-        logger.info(f"Failed login {info['fail_count']} for {username}")
+def record_failed(username, ip_addr=None):
+    keys = _attempt_keys(username, ip_addr)
+    for key in keys:
+        info = LOGIN_ATTEMPTS.setdefault(key, {'fail_count': 0, 'lockout_until': None})
+        info['fail_count'] += 1
+        if info['fail_count'] >= MAX_FAILED:
+            info['lockout_until'] = time.time() + LOCKOUT_SECONDS
+            logger.warning(f"Login lockout: {key}")
+        else:
+            logger.info(f"Failed login {info['fail_count']} for {key}")
 
-def record_success(username):
-    if username in LOGIN_ATTEMPTS:
-        LOGIN_ATTEMPTS.pop(username, None)
-    logger.info(f"Successful login for {username}")
+
+def record_success(username, ip_addr=None):
+    for key in _attempt_keys(username, ip_addr):
+        if key in LOGIN_ATTEMPTS:
+            LOGIN_ATTEMPTS.pop(key, None)
+    logger.info(f"Successful login for {(username or '').strip().lower() or 'unknown-user'} from {(ip_addr or 'unknown')}")
 
 # --- Email confirmation helpers ---
 TS_SECRET = os.getenv('TS_SECRET') or app.secret_key or 'replace-with-a-secure-secret'
@@ -390,10 +412,12 @@ def user_login():
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '')
+        ip_addr = _client_ip()
+
+        if is_locked(username, ip_addr):
+            return render_template('user_login.html', message='Too many login attempts. Try again later.')
 
         if USE_DB and get_user_by_username is not None:
-            if is_locked(username):
-                return render_template('user_login.html', message='Account locked. Try again later.')
             try:
                 user = get_user_by_username(username)
             except Exception as e:
@@ -405,19 +429,21 @@ def user_login():
                     session['u_name'] = username
                     if user.get('id'):
                         session['user_id'] = user.get('id')
-                    record_success(username)
+                    record_success(username, ip_addr)
                     return redirect(url_for('index'))
                 else:
-                    record_failed(username)
+                    record_failed(username, ip_addr)
                     return render_template('user_login.html', message='Invalid login, please try again.')
             else:
+                record_failed(username, ip_addr)
                 return render_template('user_login.html', message='Invalid login, please try again.')
 
         if username == 'admin' and password == 'adminpass':
             session['u_name'] = 'admin'
             session['user_id'] = 1
-            record_success(username)
+            record_success(username, ip_addr)
             return redirect(url_for('index'))
+        record_failed(username, ip_addr)
         return render_template('user_login.html', message='Server not configured for DB-backed authentication.')
 
     if session.get('u_name'):
