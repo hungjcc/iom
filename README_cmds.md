@@ -91,6 +91,8 @@ python tools/init_sqlite_db.py --path /tmp/iom.db
 | `tools/grant_revoke_admin.py` | 授權/撤銷 admin | `python tools/grant_revoke_admin.py grant 1` |
 | `tools/reset_password.py` | 重設密碼 | `python tools/reset_password.py --username alice --password NewPass123!` |
 | `tools/create_item_and_auction.py` | 建立測試 item + auction | `python tools/create_item_and_auction.py` |
+| `tools/backup_db.py` | 備份 SQLite DB（時間戳檔名） | `python tools/backup_db.py --source ./iom.db --output-dir ./tools/backups` |
+| `tools/restore_db.py` | 還原 SQLite DB（可 `--force` 覆寫） | `python tools/restore_db.py ./tools/backups/iom_backup_xxx.db --target ./iom.db --force` |
 | `tools/delete_auction.py` | 刪除拍賣與出價 | `python tools/delete_auction.py 1` |
 | `tools/auto_place_bid.py` | 模擬登入及出價 | `python tools/auto_place_bid.py` |
 | `tools/smoke_test.py` | 路由冒煙測試 | `python tools/smoke_test.py` |
