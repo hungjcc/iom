@@ -1,0 +1,7 @@
+You've been outbid on {{ auction_title }}.
+
+Your last bid: {{ previous_amount }}
+New highest bid: {{ new_amount }}
+{% if auction_url %}
+View auction: {{ auction_url }}
+{% endif %}

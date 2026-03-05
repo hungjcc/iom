@@ -1,0 +1,6 @@
+<p>You've been outbid on <strong>{{ auction_title }}</strong>.</p>
+<p>Your last bid: <strong>{{ previous_amount }}</strong><br>
+New highest bid: <strong>{{ new_amount }}</strong></p>
+{% if auction_url %}
+<p><a href="{{ auction_url }}">View auction</a></p>
+{% endif %}
