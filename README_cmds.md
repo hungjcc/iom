@@ -89,7 +89,7 @@ python tools/init_sqlite_db.py --path /tmp/iom.db
 | `tools/init_sqlite_db.py` | 建立/重置 `iom.db` | `python tools/init_sqlite_db.py --reset` |
 | `tools/create_member.py` | 建立會員（可 `--activate`） | `python tools/create_member.py alice --password Secret123! --activate` |
 | `tools/list_members.py` | 列出會員 | `python tools/list_members.py` |
-| `tools/grant_revoke_admin.py` | 授權/撤銷 admin | `python tools/grant_revoke_admin.py grant 1` |
+| `tools/grant_revoke_admin.py` | 授權/撤銷 admin | `python tools/grant_revoke_admin.py <grant|revoke> <member_id|username>` |
 | `tools/reset_password.py` | 重設密碼 | `python tools/reset_password.py --username alice --password NewPass123!` |
 | `tools/create_item_and_auction.py` | 建立測試 item + auction | `python tools/create_item_and_auction.py` |
 | `tools/close_expired_auctions.py` | 批次關閉已過期拍賣 | `python tools/close_expired_auctions.py` |
